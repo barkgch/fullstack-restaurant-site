@@ -1,9 +1,12 @@
 # fullstack-restaurant-site
 
-base built off of: https://www.bezkoder.com/node-js-rest-api-express-mysql/
+## backend
 
-backend: Node.js Express, MySQL
-modules:
+**based on**: https://www.bezkoder.com/node-js-rest-api-express-mysql/
+
+**using**: Node.js Express, MySQL
+
+### all modules
  - express
- - mysql2
+ - mysql
  - cors
