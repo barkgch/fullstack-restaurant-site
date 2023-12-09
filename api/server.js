@@ -1,12 +1,14 @@
 const express = require("express");
 const cors = require("cors");
+require("dotenv").config();
 
 const app = express();
 
 // set CORS. this allows frontend server to send request to this backend,
 // despite the backend being hosted on a different domain.
 var corsOptions = {
-  origin: "http://localhost:8801" // this should be where frontend server is running
+  // origin should be where frontend server is running
+  origin: process.env.CLIENT_ORIGIN || "http://localhost:3000"
 };
 app.use(cors(corsOptions));
 

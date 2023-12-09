@@ -1,4 +1,4 @@
-const mysql = require("mysql");
+const mysql = require("mysql2");
 const dbConfig = require("../config/db.config.js")
 
 // create connection
@@ -11,6 +11,7 @@ const connection = mysql.createConnection({
 
 // open connection
 connection.connect(error => {
+  // console.log("info from dotenv: ", {...connection});
   if (error) throw error;
   console.log("Successfully connected to database.");
 });

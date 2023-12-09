@@ -8,7 +8,7 @@
 
 ### all modules
  - express
- - mysql
+ - mysql2
  - cors
 
 ## frontend
@@ -18,7 +18,8 @@
  - https://www.bezkoder.com/react-crud-web-api/
  - (that video tutorial)
 
-**using**: React (through create-react-app), axios, bootstrap
+**using**: React (through create-react-app), axios, bootstrap,
+Nginx (for serving React build within Docker container)
 
 **NOTE**: `npm audit` will show some vulnerabilities in the frontend.
 These are false positives. `npm audit --production` should be used instead for
