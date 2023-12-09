@@ -2,9 +2,9 @@ const sql = require("./db.js");
 
 // constructor
 const Customer = function(customer) {
-  this.phoneNum = customer.phoneNum;
-  this.fName = customer.fName;
-  this.lName = customer.lName;
+  this.PhoneNum = customer.PhoneNum;
+  this.FName = customer.FName;
+  this.LName = customer.LName;
 };
 
 
@@ -22,8 +22,8 @@ Customer.create = (newCustomer, result) => {
 };
 
 
-Customer.findByPhone = (phoneNum, result) => {
-  sql.query(`SELECT * FROM customer WHERE PhoneNum = ${phoneNum}`, (err, res) => {
+Customer.findByPhone = (queryPhoneNum, result) => {
+  sql.query(`SELECT * FROM customer WHERE PhoneNum = ${queryPhoneNum}`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);
@@ -36,7 +36,7 @@ Customer.findByPhone = (phoneNum, result) => {
       return;
     }
 
-    // customer with given ID not found
+    // customer with given phone number not found
     result({ kind: "not_found" }, null);
   });
 };
@@ -56,7 +56,7 @@ Customer.getAll = (result) => {
 };
 
 
-Customer.updateByPhone = (phoneNum, customer, result) => {
+Customer.updateByPhone = (queryPhoneNum, customer, result) => {
   // put together query.
   // only include the columns for which a value has been provided
   // (do not update values that have not beed requested to be updated).
@@ -64,18 +64,16 @@ Customer.updateByPhone = (phoneNum, customer, result) => {
   console.log("customer object recieved: ", customer);
 
   let q = "UPDATE customer SET"
-  if (!(customer.phoneNum === undefined)) q += ` PhoneNum = ${customer.phoneNum}`;
-  if (!(customer.phoneNum === undefined) && !(customer.fName === undefined)) q+= ",";
-  if (!(customer.fName === undefined))    q += ` FName = "${customer.fName}"`;
-  if (!(customer.fName === undefined) && !(customer.lName === undefined)) q+= ",";
-  if (!(customer.lName === undefined))    q += ` LName = "${customer.lName}"`;
-  q += ` WHERE PhoneNum = ${phoneNum}`;
+  if (!(customer.PhoneNum === undefined)) q += ` PhoneNum = ${customer.PhoneNum}`;
+  if (!(customer.PhoneNum === undefined) && !(customer.FName === undefined)) q+= ",";
+  if (!(customer.FName === undefined))    q += ` FName = "${customer.FName}"`;
+  if (!(customer.FName === undefined) && !(customer.LName === undefined)) q+= ",";
+  if (!(customer.LName === undefined))    q += ` LName = "${customer.LName}"`;
+  q += ` WHERE PhoneNum = ${queryPhoneNum}`;
   console.log("query generated for update: ", q);
-  // actually make the query
+  // send the query to SQL server
   sql.query(
-    // "UPDATE customer SET PhoneNum = ?, FName = ?, LName = ? WHERE PhoneNum = ?",
     q,
-    // [customer.phoneNum, customer.fName, customer.lName, phoneNum],
     (err, res) => {
       if (err) {
         console.log("error: ", err);
@@ -89,16 +87,15 @@ Customer.updateByPhone = (phoneNum, customer, result) => {
         return;
       }
 
-      console.log(`Updated customer (phone number ${phoneNum}) on the following values: `, {...customer});
-      // console.log("Updated customer with phone number : ", { "phoneNum": phoneNum, ...customer });
-      result(null, { "phoneNum": phoneNum, ...customer });
+      console.log(`Updated customer (phone number ${queryPhoneNum}) on the following values: `, {...customer});
+      result(null, { "queryPhoneNum": queryPhoneNum, ...customer });
     }
   );
 };
 
 
-Customer.remove = (phoneNum, result) => {
-  sql.query("DELETE FROM customer WHERE PhoneNum = ?", phoneNum, (err, res) => {
+Customer.remove = (queryPhoneNum, result) => {
+  sql.query("DELETE FROM customer WHERE PhoneNum = ?", queryPhoneNum, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(null, err);
@@ -111,7 +108,7 @@ Customer.remove = (phoneNum, result) => {
       return;
     }
 
-    console.log("deleted customer with PhoneNum: ", phoneNum);
+    console.log("deleted customer with PhoneNum: ", queryPhoneNum);
     result(null, res);
   });
 };

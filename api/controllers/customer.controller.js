@@ -10,9 +10,9 @@ exports.create = (req, res) => {
   }
   // create customer model object
   const customer = new Customer({
-    phoneNum: req.body.phoneNum,
-    fName: req.body.fName,
-    lName: req.body.lName
+    PhoneNum: req.body.PhoneNum,
+    FName: req.body.FName,
+    LName: req.body.LName
   });
 
   // use model to save customer info in database
@@ -39,15 +39,15 @@ exports.findAll = (req, res) => {
 
 // Find a single customer with a PhoneNum
 exports.findOne = (req, res) => {
-  Customer.findByPhone(req.params.phoneNum, (err, data) => {
+  Customer.findByPhone(req.params.PhoneNum, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found customer with PhoneNum ${req.params.phoneNum}.`
+          message: `Not found customer with PhoneNum ${req.params.PhoneNum}.`
         });
       } else {
         res.status(500).send({
-          message: err.message || "An error occurred while retrieving customer with PhoneNum " + req.params.phoneNum
+          message: err.message || "An error occurred while retrieving customer with PhoneNum " + req.params.PhoneNum
         });
       }
     } else res.send(data);
@@ -61,7 +61,7 @@ exports.update = (req, res) => {
     res.status(400).send({
       message: "Customer update request issue: request content cannot be empty!"
     });
-  } else if (!(req.body.phoneNum || req.body.fName || req.body.lName)) {
+  } else if (!(req.body.PhoneNum || req.body.FName || req.body.LName)) {
     res.status(400).send({
       message: "Customer update request issue: at least one of the customer fields must be provided!"
     });
@@ -70,17 +70,17 @@ exports.update = (req, res) => {
   console.log(req.body);
 
   Customer.updateByPhone(
-    req.params.phoneNum,
+    req.params.PhoneNum,
     new Customer(req.body),
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
           res.status(404).send({
-            message: `Not found customer with PhoneNum ${req.params.phoneNum}.`
+            message: `Not found customer with PhoneNum ${req.params.PhoneNum}.`
           });
         } else {
           res.status(500).send({
-            message: "Error updating customer with PhoneNum " + req.params.phoneNum
+            message: "Error updating customer with PhoneNum " + req.params.PhoneNum
           });
         }
       } else res.send(data);
@@ -90,15 +90,15 @@ exports.update = (req, res) => {
 
 // Delete a customer with the specified phoneNum in the request
 exports.delete = (req, res) => {
-  Customer.remove(req.params.phoneNum, (err, data) => {
+  Customer.remove(req.params.PhoneNum, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({
-          message: `Not found customer with PhoneNum ${req.params.id}.`
+          message: `Not found customer with PhoneNum ${req.params.PhoneNum}.`
         });
       } else {
         res.status(500).send({
-          message: "Could not delete customer with PhoneNum " + req.params.id
+          message: "Could not delete customer with PhoneNum " + req.params.PhoneNum
         });
       }
     } else res.send({ message: `Customer was deleted successfully!` });

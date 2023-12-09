@@ -10,13 +10,13 @@ module.exports = app => {
   router.get("/", customer.findAll);
 
   // Retrieve a single customer with PhoneNum
-  router.get("/:phoneNum", customer.findOne);
+  router.get("/:PhoneNum", customer.findOne);
 
   // Update a customer with PhoneNum
-  router.put("/:phoneNum", customer.update);
+  router.put("/:PhoneNum", customer.update);
 
   // Delete a customer with PhoneNum
-  router.delete("/:phoneNum", customer.delete);
+  router.delete("/:PhoneNum", customer.delete);
 
   // Delete all customers
   router.delete("/", customer.deleteAll);

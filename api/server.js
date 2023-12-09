@@ -3,9 +3,10 @@ const cors = require("cors");
 
 const app = express();
 
-// set CORS
+// set CORS. this allows frontend server to send request to this backend,
+// despite the backend being hosted on a different domain.
 var corsOptions = {
-  origin: "http://localhost:8801"
+  origin: "http://localhost:8801" // this should be where frontend server is running
 };
 app.use(cors(corsOptions));
 
