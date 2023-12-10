@@ -33,3 +33,40 @@ list of all additional modules that have been installed after
  - bootstrap
  - react-router-dom
  - sass (to allow scss file use)
+
+## running locally
+
+run `npm install` in `./api/` and in `./client`. this should only need to be done
+once, just to download all the modules specified in the `package.json` file at
+each directory.
+
+MySQL must be set up as outlined below.
+
+Once both steps above are completed, run the backend and frontend servers with
+`npm start` in `./api/` and in `./client/`.
+
+### MySQL setup
+
+(based off of the
+[report 3 doc](https://docs.google.com/document/d/1NEaz9-x3zibC6JoXMWk7hkskMsiuFcdolJ_BZYOd248/edit?usp=sharing).
+as we all work on our parts of the site, we can add new tables to our MySQL and
+update this section)
+
+```sql
+CREATE DATABASE restaurant;
+
+CREATE USER 'restaurant_user'@'localhost' IDENTIFIED BY '123456';
+
+GRANT SELECT, INSERT, DELETE, UPDATE
+ON restaurant.*
+TO 'restaurant_user'@'localhost';
+
+USE restaurant;
+
+CREATE TABLE CUSTOMER (
+PhoneNum VARCHAR(14) NOT NULL,
+FName VARCHAR(35) NOT NULL,
+LName VARCHAR(35) NOT NULL,
+PRIMARY KEY (PhoneNum)
+);
+```
