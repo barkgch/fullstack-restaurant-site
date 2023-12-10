@@ -12,6 +12,8 @@ import AddCustomer from "./components/add-customer.component";
 import Customer from "./components/customer.component";
 import CustomersList from "./components/customers-list.component";
 
+import Register from "./pages/register.js";
+
 
 class App extends Component {
   render() {
@@ -22,6 +24,7 @@ class App extends Component {
         <div className="container">
           <Routes>
             <Route path="/" element={<CustomersList/>} />
+            <Route path="/register" element={<Register />} />
             <Route path="/customers" element={<CustomersList/>} />
             <Route path="/add" element={<AddCustomer/>} />
             <Route path="/customers/:PhoneNum" element={<Customer/>} />

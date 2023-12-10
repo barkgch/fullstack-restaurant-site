@@ -10,13 +10,14 @@
  - express
  - mysql2
  - cors
+ - bcryptjs (for password encryption)
 
 ## frontend
 
 **based on**:
  - https://www.bezkoder.com/react-node-express-mysql/
  - https://www.bezkoder.com/react-crud-web-api/
- - (that video tutorial)
+ - [Lama Dev's React Node.js MySQL Full Stack Blog App Tutorial](https://youtu.be/0aPLk2e2Z3g?si=2YauU5U6pDdNQLMi)
 
 **using**: React (through create-react-app), axios, bootstrap,
 Nginx (for serving React build within Docker container)
@@ -64,9 +65,39 @@ TO 'restaurant_user'@'localhost';
 USE restaurant;
 
 CREATE TABLE CUSTOMER (
-PhoneNum VARCHAR(14) NOT NULL,
-FName VARCHAR(35) NOT NULL,
-LName VARCHAR(35) NOT NULL,
-PRIMARY KEY (PhoneNum)
+  PhoneNum VARCHAR(14) NOT NULL,
+  FName VARCHAR(35) NOT NULL,
+  LName VARCHAR(35) NOT NULL,
+  PRIMARY KEY (PhoneNum)
+);
+
+CREATE TABLE ACCOUNT (
+  AccountID INT NOT NULL AUTO_INCREMENT,
+  Email VARCHAR(254) NOT NULL,
+  Password VARCHAR(45) NOT NULL,
+  PRIMARY KEY (AccountID)
+);
+
+
+CREATE TABLE CUSTOMER_ACCOUNT (
+  AccountID INT NOT NULL,
+  Customer VARCHAR(14) NOT NULL,
+  NumPastOrders INT DEFAULT 0,
+  PRIMARY KEY (AccountID),
+  FOREIGN KEY (AccountID) REFERENCES ACCOUNT(AccountID)
+    ON DELETE CASCADE,
+  FOREIGN KEY (Customer) REFERENCES CUSTOMER(PhoneNum)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+
+CREATE TABLE EMPLOYEE_ACCOUNT (
+  AccountID INT NOT NULL,
+  FName VARCHAR(35) NOT NULL,
+  LName VARCHAR(35) NOT NULL,
+  PermissionLevel INT DEFAULT 0,
+  PRIMARY KEY (AccountID),
+  FOREIGN KEY (AccountID) REFERENCES ACCOUNT(AccountID)
+    ON DELETE CASCADE
 );
 ```

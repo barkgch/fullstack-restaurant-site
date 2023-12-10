@@ -1,3 +1,6 @@
+/**
+ * Provide way for all pages to make consistent API requests to the correct place.
+ */
 import axios from "axios";
 
 export default axios.create({

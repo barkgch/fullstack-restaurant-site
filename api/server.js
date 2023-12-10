@@ -21,7 +21,8 @@ app.get("/", (req, res) => {
   res.json({message: "Welcome to backend server"});
 });
 
-const routes = require("./routes/customer.routes.js")(app);
+require("./routes/customer.routes.js")(app);
+require("./routes/account.routes.js")(app);
 
 // set port to listen for requests on
 const PORT = process.env.PORT || 8800;

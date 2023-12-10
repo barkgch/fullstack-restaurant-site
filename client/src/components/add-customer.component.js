@@ -4,14 +4,14 @@ import CustomerDataService from "../services/customer.service";
 export default class AddCustomer extends Component {
   constructor(props) {
     super(props);
-    this.onChangePhone = this.onChangePhone.bind(this);
-    this.onChangeFName = this.onChangeFName.bind(this);
-    this.onChangeLName = this.onChangeLName.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.saveCustomer = this.saveCustomer.bind(this);
     this.newCustomer = this.newCustomer.bind(this);
 
+    this.handleChange = this.handleChange.bind(this);
+
     this.state = {
-      PhoneNum: null,
+      PhoneNum: "",
       FName: "",
       LName: "", 
 
@@ -19,23 +19,11 @@ export default class AddCustomer extends Component {
     };
   }
 
-  onChangePhone(e) {
+  handleChange(e) {
     this.setState({
-      PhoneNum: e.target.value
+      [e.target.name]: e.target.value
     });
-  }
-
-  onChangeFName(e) {
-    this.setState({
-      FName: e.target.value
-    });
-  }
-
-  onChangeLName(e) {
-    this.setState({
-      LName: e.target.value
-    });
-  }
+  };
 
   saveCustomer() {
     var data = {
@@ -90,8 +78,8 @@ export default class AddCustomer extends Component {
                 id="phoneNum"
                 required
                 value={this.state.PhoneNum}
-                onChange={this.onChangePhone}
-                name="phoneNum"
+                onChange={this.handleChange}
+                name="PhoneNum"
               />
             </div>
 
@@ -103,8 +91,8 @@ export default class AddCustomer extends Component {
                 id="fName"
                 required
                 value={this.state.FName}
-                onChange={this.onChangeFName}
-                name="fName"
+                onChange={this.handleChange}
+                name="FName"
               />
             </div>
 
@@ -116,8 +104,8 @@ export default class AddCustomer extends Component {
                 id="lName"
                 required
                 value={this.state.LName}
-                onChange={this.onChangeLName}
-                name="lName"
+                onChange={this.handleChange}
+                name="LName"
               />
             </div>
 

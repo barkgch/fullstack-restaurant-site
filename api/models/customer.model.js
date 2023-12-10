@@ -1,6 +1,19 @@
+/**
+ * BASED ON tutorial.model.js FROM:
+ *    https://www.bezkoder.com/node-js-rest-api-express-mysql/
+ */
 const sql = require("./db.js");
 
-// constructor
+/**
+ * Create customer model object to interact with CUSTOMER table.
+ * 
+ * Fields:
+ *  - `PhoneNum`
+ *  - `FName`
+ *  - `LName`
+ * 
+ * @param {*} customer 
+ */
 const Customer = function(customer) {
   this.PhoneNum = customer.PhoneNum;
   this.FName = customer.FName;
