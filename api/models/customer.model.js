@@ -36,7 +36,7 @@ Customer.create = (newCustomer, result) => {
 
 
 Customer.findByPhone = (queryPhoneNum, result) => {
-  sql.query(`SELECT * FROM customer WHERE PhoneNum = ${queryPhoneNum}`, (err, res) => {
+  sql.query(`SELECT * FROM customer WHERE PhoneNum = '${queryPhoneNum}'`, (err, res) => {
     if (err) {
       console.log("error: ", err);
       result(err, null);

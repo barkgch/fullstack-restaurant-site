@@ -95,7 +95,7 @@ Account.findByEmail = (queryEmail, result) => {
       // only returning first result item because there should never be more
       // than one. each customer should have only one account, and phone is
       // primary key of customer.
-      console.log("Found account: ", res[0]);
+      console.log("Found accounts: ", res[0]);
       result(null, res[0]);
       return;
     }

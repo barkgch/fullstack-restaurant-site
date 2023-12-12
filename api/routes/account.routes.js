@@ -13,14 +13,25 @@
 
 module.exports = app => {
   const cAccount = require("../controllers/customer_account.controller.js");
+  const eAccount = require('../controllers/employee_account.controller.js');
   
   var router = require("express").Router();
 
   router.post("/customer/register/", cAccount.register);
+  router.post("/customer/login/", cAccount.login);
   router.post("/customer/update/:AccountID", cAccount.update);
-  // router.post("/customer/login/", cAccount.login);
 
-  router.post("/logout")
+  router.post("/employee/register/", eAccount.register);
+  router.post("/employee/login/", eAccount.login);
+  router.post("/employee/update/:AccountID", eAccount.update);
+
+  // deletes cookie that had been generated for user.
+  router.post("/logout", (req, res) => {
+    res.clearCookie("access_token",{
+      sameSite:"none",
+      secure:true
+    }).status(200).json("User has been logged out.")
+  });
 
   // // Create a new customer account
   // router.post("/", cAccount.create);

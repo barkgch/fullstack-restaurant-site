@@ -1,7 +1,7 @@
 /**
- * Controller that handles creation, deletion, and modification of all customer
- * account-related information (all information within tables ACCOUNT, CUSTOMER,
- * and CUSTOMER_ACCOUNT)
+ * Controller that handles creation, deletion, and modification of all employee
+ * account-related information (all information within tables ACCOUNT and
+ * EMPLOYEE_ACCOUNT)
  * 
  * BASED ON:
  *  - tutorial.controller.js FROM
@@ -14,18 +14,16 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 const Account = require("../models/account.model.js");
-const Customer = require("../models/customer.model.js");
-const CustomerAccount = require("../models/customer_account.model.js");
+const EmployeeAccount = require("../models/employee_account.model.js");
 
 
 /**
- * Completes customer account creation by checking existing users and adding
- * CUSTOMER_ACCOUNT, CUSTOMER, and ACCOUNT rows to the tables if no existing 
- * users.
+ * Completes employee account creation by checking existing users and adding
+ * EMPLOYEE_ACCOUNT and ACCOUNT rows to the tables if no existing users.
  * 
  * Assumes `req.body` contains valid...
  *  - `Email`,
- *  - `PhoneNum`,
+ *  - `PermissionLevel`,
  *  - `FName`,
  *  - `LName`, and
  *  - `Password`
@@ -34,6 +32,8 @@ const CustomerAccount = require("../models/customer_account.model.js");
  * @param {*} res 
  */
 exports.register = (req, res) => {
+  console.log("DEBUG: req body contents:", {...req.body});
+
   // CHECK IF EMAIL ALREADY IN USE
   Account.findByEmail(req.body.Email, (err, data) => {
     if (data) {
@@ -51,90 +51,57 @@ exports.register = (req, res) => {
       }
     }
 
-    // CHECK IF PHONE NUMBER ALREADY IN USE
-    Customer.findByPhone(req.body.PhoneNum, (err, data) => {
-      if (data) {
-        res.status(409).send({
-          message: "User with number " + req.body.PhoneNum + " already exists!"
+    // hash password
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.Password, salt);
+
+    // create account model object
+    const account = new Account({
+      Email: req.body.Email,
+      Password: hash
+    });
+    // use model to create account in database
+    Account.create(account, (err, data) => {
+      if (err) {
+        res.status(500).send({
+          message: err.message || "An error occurred while creating account for employee account."
         });
         return;
       }
-      if (err) {
-        if (err.kind != "not_found") {
-          res.status(500).send({
-            message: `ERROR occurred while checking phone number availability: ${err.message}`
-          });
-          return;
-        }
-      }
+      let id = data;
 
-      // create customer model object
-      const customer = new Customer({
-        PhoneNum: req.body.PhoneNum,
+      // create employee account model object using ID returned by prev query
+      const eAccount = new EmployeeAccount({
+        AccountID: id,
+        PermissionLevel: req.body.PermissionLevel,
         FName: req.body.FName,
         LName: req.body.LName
       });
-      // use model to create customer in database
-      Customer.create(customer, (err, data) => {
+      // use model to create employee account in database
+      EmployeeAccount.create(eAccount, (err, data) => {
         if (err) {
           res.status(500).send({
-            message: `ERROR occurred while creating customer: ${err.message}`
+            message: err.message || "An error occurred while creating employee account."
           });
+          // creation failed. need to delete account we created earlier.
+          Account.remove(id);
           return;
         }
-
-        // hash password
-        const salt = bcrypt.genSaltSync(10);
-        const hash = bcrypt.hashSync(req.body.Password, salt);
-
-        // create account model object
-        const account = new Account({
-          Email: req.body.Email,
-          Password: hash
-        });
-        // use model to create account in database
-        Account.create(account, (err, data) => {
-          if (err) {
-            res.status(500).send({
-              message: err.message || "An error occurred while creating account for customer account."
-            });
-            // creation failed. need to delete customer we created earlier.
-            Customer.remove(customer.PhoneNum);
-            return;
-          }
-          let id = data;
-
-          // create customer account model object using ID returned by prev query
-          const cAccount = new CustomerAccount({
-            AccountID: id,
-            Customer: req.body.PhoneNum,
-            NumPastOrders: 0
-          });
-          // use model to create customer account in database
-          CustomerAccount.create(cAccount, (err, data) => {
-            if (err) {
-              res.status(500).send({
-                message: err.message || "An error occurred while creating customer account."
-              });
-              // creation failed. need to delete customer and account we created earlier.
-              Customer.remove(customer.PhoneNum);
-              Account.remove(id);
-              return;
-            }
-            res.status(200).send({
-              message: `User has been created successfully.`
-            });
-          });
+        res.status(200).send({
+          message: `User has been created successfully.`
         });
       });
     });
+
+
   });
 }
 
 
 /**
- * Checks to see if exists an account with given email that belongs to a 
- * customer, then checks if passwords match for that account.
+ * Checks to see if exists an account with given email exists,
+ * checks if account is employee account, 
+ * then checks if passwords match for that account.
  * 
  * Creates access token cookie for user upon success.
  * 
@@ -154,7 +121,7 @@ exports.login = (req, res) => {
         });
         return;
       } else {
-        console.log(`ERROR (CustomerAccount.login) ${err.message}`);
+        console.log(`ERROR (EmployeeAccount.login) ${err.message}`);
         res.status(500).send({
           message: "INTERNAL ERROR"
         });
@@ -163,26 +130,30 @@ exports.login = (req, res) => {
     }
     console.log("DEBUG: EMAIL FOUND");
     // account may be employee or customer account.
-    // check specifically if a customer exists with this account ID 
-    console.log('DEBUG: ', resultAccount);
-    CustomerAccount.findByID(resultAccount.AccountID, (err, resultCustomer) => {
-      if (resultCustomer) {
-        // we have determined that this account belongs to a customer
+    // check specifically if a customer exists with this account ID
+    
+    console.log('DEBUG: ', {...resultAccount});
+    EmployeeAccount.findByID(resultAccount.AccountID, (err, resultEmployee) => {
+      if (resultEmployee) {
+        // we have determined that this account belongs to an employee
         //check password
         if (bcrypt.compareSync(req.body.Password, resultAccount.Password)) {
           // passwords match. create token for user
           const token = jwt.sign({
             id: resultAccount.AccountID,
-            type: "customer"
+            type: "employee",
+            permission: resultEmployee.PermissionLevel
           }, "jwtsecretkey");
 
+          // send cookie and some account info
           // httpOnly means the cookie cannot be accessed directly
           // cookie can only be accessed through API requests
           res.cookie("access_token", token, { 
             httpOnly: true 
           }).status(200).send({
             id: resultAccount.AccountID,
-            type: "customer"
+            type: "employee",
+            permission: resultEmployee.PermissionLevel
           })
           return;
         } else {
@@ -199,7 +170,7 @@ exports.login = (req, res) => {
             message: "Wrong username or password!"
           });
         } else {
-          console.log(`ERROR (CustomerAccount.login) ${err.message}`);
+          console.log(`ERROR (EmployeeAccount.login) ${err.message}`);
           res.status(500).send({
             message: "INTERNAL ERROR"
           });
@@ -232,9 +203,9 @@ exports.update = (req, res) => {
     });
   }
   // console.log(`DEBUG: ${req.body}`);
-  CustomerAccount.update(
+  EmployeeAccount.update(
     req.params.AccountID,
-    new CustomerAccount(req.body),
+    new EmployeeAccount(req.body),
     (err, data) => 
   {
     if (err) {
@@ -259,7 +230,7 @@ exports.update = (req, res) => {
  * @param {*} res 
  */
 exports.delete = (req, res) => {
-  CustomerAccount.remove(req.params.AccountID, (err, data) => {
+  EmployeeAccount.remove(req.params.AccountID, (err, data) => {
     if (err) {
       if (err.kind === "not_found") {
         res.status(404).send({

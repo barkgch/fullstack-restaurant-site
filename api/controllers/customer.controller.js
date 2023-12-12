@@ -32,6 +32,7 @@ exports.create = (req, res) => {
 
 // Retrieve all customers from the database (does not accept conditions)
 exports.findAll = (req, res) => {
+  console.log("in customer findall");
   Customer.getAll( (err, data) => {
     if (err) {
       res.status(500).send({

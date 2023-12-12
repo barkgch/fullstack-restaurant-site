@@ -11,6 +11,8 @@
  - mysql2
  - cors
  - bcryptjs (for password encryption)
+ - jsonwebtoken (for user authentication)
+ - cookieparser (to allow use of cookies)
 
 ## frontend
 
@@ -38,13 +40,14 @@ list of all additional modules that have been installed after
 ## running locally
 
 run `npm install` in `./api/` and in `./client`. this should only need to be done
-once, just to download all the modules specified in the `package.json` file at
+when first cloning into this repository or when changes are made to which packages
+are being used, just to download all the modules specified in the `package.json` file at
 each directory.
 
-MySQL must be set up as outlined below.
+MySQL must be set up as outlined in the queries below.
 
 Once both steps above are completed, run the backend and frontend servers with
-`npm start` in `./api/` and in `./client/`.
+`npm start` in `./api/` and in `./client/` respectively.
 
 ### MySQL setup
 

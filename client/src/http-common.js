@@ -4,6 +4,7 @@
 import axios from "axios";
 
 export default axios.create({
+  withCredentials: true,
   // baseURL should point to where backend server is running
   baseURL: process.env.REACT_APP_API_BASE_URL || "http://localhost:8800/api",
   headers: {

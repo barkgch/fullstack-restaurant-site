@@ -1,120 +1,118 @@
-import React, { Component } from "react";
-import CustomerDataService from "../services/customer.service";
+/**
+ * Page to allow logging into accounts.
+ * 
+ * BASED ON:
+ *  - BezKoder's React.js CRUD example to consume Web API
+ *        https://www.bezkoder.com/react-crud-web-api/
+ *  - Lama Dev's React Node.js MySQL Full Stack Blog App Tutorial
+ *        https://youtu.be/0aPLk2e2Z3g?si=2YauU5U6pDdNQLMi
+ *        https://github.com/safak/youtube2022/tree/blog-app
+ */
+import React, { useContext, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 
-export default class AddCustomer extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.saveCustomer = this.saveCustomer.bind(this);
-    this.newCustomer = this.newCustomer.bind(this);
+import { AuthContext } from '../context/auth.context.js';
 
-    this.handleChange = this.handleChange.bind(this);
+const Login = () => {
+  const [inputs, setInputs] = useState({
+    Email: "",
+    Password: ""
+  })
+  const [err, setError] = useState(null);
+  const { loginCustomer, loginEmployee } = useContext(AuthContext);
 
-    this.state = {
-      PhoneNum: "",
-      FName: "",
-      LName: "", 
+  const navigate = useNavigate();
+  const location = useLocation();
 
-      submitted: false
-    };
+
+  const validateInput = (input) => {
+    // confirm email
+    if (input.Email === undefined || input.Email === "") {
+      throw(new Error("Please enter an email address!"));
+    } else {
+      // TODO: perform additional tests to confirm validity of address
+    }
+    // confirm password
+    if (input.Password === undefined || input.Password === "") {
+      throw(new Error("Please enter a password!"));
+    }
   }
 
-  handleChange(e) {
-    this.setState({
-      [e.target.name]: e.target.value
-    });
+
+  const handleChange = e => {
+    setInputs(prev => ({...prev, [e.target.name]: e.target.value}))
+  }
+
+
+  const handleSubmit = async e => {
+    e.preventDefault()  // prevents page refresh on submission
+
+    var data = {
+      Email: inputs.Email,
+      Password: inputs.Password
+    };
+    try { validateInput(data); }
+    catch (e) {
+      setError(e.message);
+      return;
+    }
+
+    try {
+      if (location.pathname === '/login') {
+        // customer login
+        await loginCustomer(inputs);
+      } else {
+        // employee login
+        await loginEmployee(inputs);
+      }
+    } catch (e) {
+      setError(e.response.data.message);
+      return;
+    }
+
+    navigate("/");
   };
 
-  saveCustomer() {
-    var data = {
-      PhoneNum: this.state.PhoneNum,
-      FName: this.state.FName,
-      LName: this.state.LName
-    };
-
-    CustomerDataService.create(data)
-      .then(response => {
-        this.setState({
-          PhoneNumber: response.data.PhoneNum,
-          FName: response.data.FName,
-          LName: response.data.LName,
-
-          submitted: true
-        });
-        console.log(response.data);
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
-  newCustomer() {
-    this.setState({
-      PhoneNum: null,
-      FName: "",
-      LName: "",
-
-      submitted: false
-    });
-  }
-
-  render() {
-    return (
-      <div className="submit-form">
-        {this.state.submitted ? (
-          <div>
-            <h4>You submitted successfully!</h4>
-            <button className="btn btn-success" onClick={this.newCustomer}>
-              Add
-            </button>
-          </div>
-        ) : (
-          <div>
-            <div className="form-group">
-              <label htmlFor="phoneNum">LOGIN PLACEHOLDER</label>
-              <input
-                type="text"
-                className="form-control"
-                id="phoneNum"
-                required
-                value={this.state.PhoneNum}
-                onChange={this.handleChange}
-                name="PhoneNum"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="fname">First name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="fName"
-                required
-                value={this.state.FName}
-                onChange={this.handleChange}
-                name="FName"
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="lName">Last name</label>
-              <input
-                type="text"
-                className="form-control"
-                id="lName"
-                required
-                value={this.state.LName}
-                onChange={this.handleChange}
-                name="LName"
-              />
-            </div>
-
-            <button onClick={this.saveCustomer} className="btn btn-success">
-              Submit
-            </button>
-          </div>
-        )}
+  
+  return (
+    <div className="submit-form">
+      {location.pathname === '/login' ? <h1>Login</h1> : <h1>Employee Login</h1>}
+      <div className="form-group">
+        <label htmlFor="email">Email</label>
+        <input
+          type="text"
+          className="form-control"
+          id="email"
+          required
+          name="Email"
+          onChange={handleChange}
+        />
       </div>
-    );
-  }
+
+      <div className="form-group">
+        <label htmlFor="password">Password</label>
+        <input
+          type="password"
+          className="form-control"
+          id="password"
+          required
+          maxLength="12"
+          name="Password"
+          onChange={handleChange}
+        />
+      </div>
+
+      <button onClick={handleSubmit} className="btn btn-success">
+        Login
+      </button>
+      {err && <p>{err}</p>}
+      <p>Don't have an account? <Link to="/register">Create one</Link>!</p>
+      {location.pathname === '/login' ? 
+        <p>Are you an employee? Head over to the <Link to="/employee/login">employee login</Link>!</p> :
+        <p>Are you a customer? Head over to the <Link to="/register">customer login</Link>!</p>
+      }
+    </div>
+  )
 }
+
+export default Login

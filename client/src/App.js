@@ -14,6 +14,7 @@ import CustomersList from "./components/customers-list.component";
 
 import Register from "./pages/register.jsx";
 import Login from "./pages/login.jsx";
+import CreateEmployeeAccount from "./pages/createEmployee.jsx";
 
 
 class App extends Component {
@@ -27,6 +28,8 @@ class App extends Component {
             <Route path="/" element={<CustomersList/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/employee/login" element={<Login />} />
+            <Route path="/employee/createAccount" element={<CreateEmployeeAccount />} />
             <Route path="/customers" element={<CustomersList/>} />
             <Route path="/add" element={<AddCustomer/>} />
             <Route path="/customers/:PhoneNum" element={<Customer/>} />
