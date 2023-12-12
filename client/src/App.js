@@ -22,7 +22,7 @@ import CreateEmployeeAccount from "./pages/createEmployee.jsx";
 class App extends Component {
   render() {
     return (
-      <div className="app">
+      <div>
         <Navbar />
 
         <div className="container">

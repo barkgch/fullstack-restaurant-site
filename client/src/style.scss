@@ -1,35 +1,72 @@
+/**
+ * BASED ON:
+ *  - Lama Dev's React Node.js MySQL Full Stack Blog App Tutorial
+ *        https://youtu.be/0aPLk2e2Z3g?si=2YauU5U6pDdNQLMi
+ *        https://github.com/safak/youtube2022/tree/blog-app
+ */
 $base_colour : darkred;
-$accent_colour : red;
+$accent_colour : crimson;
+$neutral_dark : darkslategrey;
+$neutral_light : grey;
+$lightest : white;
+$padding_standard : 10px;
 
+//--------------------------------------------------------------------------
+// NAVBAR
+//--------------------------------------------------------------------------
 nav {
+  background-color: $neutral_dark;
+  height: 80px;
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
-  .logo {
-    height: 60px;
+  .nav-brand {
+    padding: $padding_standard;
+    height: 100%;
+    .logo {
+      height: 100%;
+    }
+  }
+
+  .nav-items {
+    display: flex;
+    align-items: center;
+
+    .nav-item {
+      font-size: large;
+      font-weight: bold;
+      color: $accent_colour;
+
+      padding: $padding_standard;
+      display: flex;
+      align-items: center;
+    }
+  }
+
+  .nav-account {
+    padding: $padding_standard;
+    display: flex;
+    align-items: center;
+    color : $neutral_light;
+
+    .nav-link {
+      color: $lightest;
+    }
   }
 }
 
-//--------------------------------------------------------------------------
-// FROM: React.js CRUD example to consume Web API
-//    (https://www.bezkoder.com/react-crud-web-api/)
-//--------------------------------------------------------------------------
-.list {
-  text-align: left;
-  max-width: 750px;
-  margin: auto;
-}
+// form {
+//   display: flex;
+//   flex-direction: column;
 
-.submit-form {
-  max-width: 300px;
-  margin: auto;
-}
+//   .form-field {
+//     display: flex;
+    
+//   }
+// }
 
-.edit-form {
-  max-width: 300px;
-  margin: auto;
-}
 //--------------------------------------------------------------------------
 
 // all below is from lamadev tutorial (or based on it)
