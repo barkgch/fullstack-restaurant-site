@@ -12,6 +12,8 @@ import AddCustomer from "./components/add-customer.component";
 import Customer from "./components/customer.component";
 import CustomersList from "./components/customers-list.component";
 
+import ItemsList from "./components/items-list.components.js";
+
 import Register from "./pages/register.jsx";
 import Login from "./pages/login.jsx";
 import CreateEmployeeAccount from "./pages/createEmployee.jsx";
@@ -33,6 +35,7 @@ class App extends Component {
             <Route path="/customers" element={<CustomersList/>} />
             <Route path="/add" element={<AddCustomer/>} />
             <Route path="/customers/:PhoneNum" element={<Customer/>} />
+            <Route path="/menu" element={<ItemsList/>} />
           </Routes>
         </div>
 

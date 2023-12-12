@@ -20,6 +20,7 @@
  - https://www.bezkoder.com/react-node-express-mysql/
  - https://www.bezkoder.com/react-crud-web-api/
  - [Lama Dev's React Node.js MySQL Full Stack Blog App Tutorial](https://youtu.be/0aPLk2e2Z3g?si=2YauU5U6pDdNQLMi)
+ - [freeCodeCamp's How to Validate Forms in React – A Step-By-Step Tutorial for Beginners](https://www.freecodecamp.org/news/how-to-validate-forms-in-react/)
 
 **using**: React (through create-react-app), axios, bootstrap,
 Nginx (for serving React build within Docker container)
@@ -102,5 +103,14 @@ CREATE TABLE EMPLOYEE_ACCOUNT (
   PRIMARY KEY (AccountID),
   FOREIGN KEY (AccountID) REFERENCES ACCOUNT(AccountID)
     ON DELETE CASCADE
+);
+
+CREATE TABLE ITEM (
+  ItemID INT NOT NULL AUTO_INCREMENT,
+  Name VARCHAR(255) NOT NULL,
+  Description TEXT,
+  Picture VARCHAR(255),
+  Price DECIMAL(10,2) NOT NULL,
+  PRIMARY KEY (ItemID)
 );
 ```
