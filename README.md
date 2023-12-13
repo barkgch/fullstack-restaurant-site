@@ -36,6 +36,7 @@ list of all additional modules that have been installed after
  - axios
  - bootstrap
  - react-router-dom
+ - react-hook-form (for easier input validation on forms)
  - sass (to allow scss file use)
 
 ## running locally
@@ -114,3 +115,19 @@ CREATE TABLE ITEM (
   PRIMARY KEY (ItemID)
 );
 ```
+
+## misc. Notes
+
+### restaurant employee privilege levels
+
+0 - only has access to waitlist/reservations
+
+1 - same as 0 and also has access to special reservation info
+
+2 - same as 1 and also has access to customer account info
+
+3 - same as 2 and also can modify menu items
+
+4 - same as 3 and also can modify location info
+
+5 - same as 4 and also can create and modify employee accounts

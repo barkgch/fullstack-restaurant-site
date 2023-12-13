@@ -19,11 +19,17 @@ module.exports = app => {
 
   router.post("/customer/register/", cAccount.register);
   router.post("/customer/login/", cAccount.login);
-  router.post("/customer/update/:AccountID", cAccount.update);
+  router.post("/customer/update/:AccountID", cAccount.authUpdate);
 
   router.post("/employee/register/", eAccount.register);
   router.post("/employee/login/", eAccount.login);
-  router.post("/employee/update/:AccountID", eAccount.update);
+  router.post("/employee/update/:AccountID", eAccount.authUpdate);
+
+  router.get('/customer/:AccountID', cAccount.authGet);
+  router.get('/employee/:AccountID', eAccount.authGet);
+
+  router.delete('/customer/:AccountID', cAccount.authDelete);
+  router.delete('/employee/:AccountID', eAccount.authDelete);
 
   // deletes cookie that had been generated for user.
   router.post("/logout", (req, res) => {
@@ -32,24 +38,6 @@ module.exports = app => {
       secure:true
     }).status(200).json("User has been logged out.")
   });
-
-  // // Create a new customer account
-  // router.post("/", cAccount.create);
-
-  // // Retrieve all customer accounts
-  // router.get("/", cAccount.findAll);
-
-  // // Retrieve a single customer account with ID
-  // router.get("/id=:PhoneNum", cAccount.findID);
-
-  // // Retrieve a single customer customer with PhoneNum
-  // router.get("/phone=:PhoneNum", cAccount.findPhone);
-
-  // // Update a customer account with ID
-  // router.put("/:AccountID", cAccount.update);
-
-  // // Delete a customer account with ID
-  // router.delete("/:AccountID", cAccount.delete);
 
   app.use('/api/account', router);
 };

@@ -27,6 +27,8 @@ const Navbar = () => {
       </div>
       {currentUser ? 
         <div className='nav-account'>
+          <Link to={`/account/${currentUser.id}`} className='nav-link'>My Account</Link>
+          /
           <span onClick={logout} className='nav-link nav-logout'>Logout</span>
         </div> : 
         <div className='nav-account'>

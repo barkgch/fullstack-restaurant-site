@@ -7,9 +7,10 @@
 $base_colour : darkred;
 $accent_colour : crimson;
 $neutral_dark : darkslategrey;
-$neutral_light : grey;
+$neutral_light : lightgrey;
 $lightest : white;
 $padding_standard : 10px;
+
 
 //--------------------------------------------------------------------------
 // NAVBAR
@@ -57,72 +58,80 @@ nav {
   }
 }
 
-// form {
-//   display: flex;
-//   flex-direction: column;
 
-//   .form-field {
-//     display: flex;
-    
-//   }
-// }
+form {
+  width: 100%;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  h1 {
+    color: $accent_colour;
+    font-weight: bold;
+  }
+
+  button {
+    width: max-content;
+    margin: $padding_standard;
+    padding: 5px 10px;
+    border: none;
+    color: $lightest;
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+  .btn-delete {
+    background-color: crimson;
+  }
+  .btn-submit {
+    background-color: green;
+  }
+  .btn-neutral {
+    color: $base_colour;
+    background-color: $neutral_light;
+  }
+
+  label {
+    font-weight: bold;
+    color: $base_colour;
+    margin: $padding_standard
+  }
+  .label-group {
+    width: 400px;
+    display: flex;
+    align-content: center;
+    justify-content:space-between;
+
+    .label-contents {
+      display: flex;
+      margin: $padding_standard
+    }
+  }
+
+  input{
+    width: 100%;
+    height: 30px;
+    padding: 10px;
+    border: none;
+    border-bottom: 2px solid $base_colour;
+  }
+  .input-row {
+    margin: $padding_standard;
+    display: flex;
+  }
+
+  .err-msg {
+    color: crimson;
+  }
+}
 
 //--------------------------------------------------------------------------
 
 // all below is from lamadev tutorial (or based on it)
-
-//--------------------------------------------------------------------------
-// NAVBAR
-//--------------------------------------------------------------------------
-.navbar{
-  width: 100%;
-
-  .container{
-    padding: 10px 0px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    .logo{
-      img{
-        width: 60px;
-        height: 60px;
-      }
-    }
-
-    .links{
-      display: flex;
-      align-items: center;
-      gap: 10px;
-
-      h6{
-        font-size: 16px;
-        font-style: bold;
-      }
-
-      span{
-        cursor: pointer;
-      }
-
-      .write{
-        color: white;
-        background-color: $base_colour;
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        &:hover{
-          color: $base_colour;
-          background-color: $accent_colour;
-        }
-      }
-    }
-  }
-}
-
 
 
 .app{

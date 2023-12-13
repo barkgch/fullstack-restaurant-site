@@ -183,64 +183,312 @@ exports.login = (req, res) => {
 
 
 /**
- * Update customer account with ID given by `req.params.AccountID` to values
- * given by `req.body.AccountID`, `req.body.Customer`, and `req.body.NumPastOrders`.
+ * First authenticates cookie (checks if cookie ID is same as account ID or
+ * if it belongs to an employee with appropriate clearance) and then
+ * returns info on employee account with account ID `req.params.AccountID`.
  * 
- * At least one of the values-to-update must be defined within the body.
+ * Info returned:
+ *  - `FName`
+ *  - `LName`
+ *  - `Email`
+ *  - `PermissionLevel`
  * 
  * @param {*} req 
  * @param {*} res 
  */
-exports.update = (req, res) => {
-  // validate body contents
-  if (!req.body) {
-    res.status(400).send({
-      message: "Request content cannot be empty!"
-    });
-  } else if (!(req.body.AccountID || req.body.Customer || req.body.NumPastOrders)) {
-    res.status(400).send({
-      message: "Request must define at least one field to update!"
-    });
-  }
-  // console.log(`DEBUG: ${req.body}`);
-  EmployeeAccount.update(
-    req.params.AccountID,
-    new EmployeeAccount(req.body),
-    (err, data) => 
-  {
+exports.authGet = (req, res) => {
+  console.log('DEBUG: getting employee account info for account ID ', req.params.AccountID);
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).send({
+    message: 'Missing cookie required to confirm identity!'
+  });
+
+  jwt.verify(token, "jwtsecretkey", (err, userInfo) => {
+    if (err) {
+      console.log('ERROR (employee_account.controller)', err);
+      return res.status(403).send({
+        message: 'Cookie required to confirm identity is not valid!'
+      });
+    }
+
+    console.log('DEBUG: cookie has ID ', userInfo.id);
+
+    if (userInfo.id == req.params.AccountID) {
+      get(req, res);
+    } else {
+      // cookie ID does not match account ID
+      // get employee to whom it belongs
+      EmployeeAccount.findByID(userInfo.id, (err, eAccount) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            return res.status(404).send({
+              message: 'Your account could not be found! Please try logging out and logging in again.'
+            });
+          }
+          console.log('ERROR (employee_account.controller)', err);
+          return res.status(500).send({
+            message: 'INTERNAL ERROR'
+          });
+        }
+
+        if (eAccount.PermissionLevel < 5) {
+          return res.status(403).send({
+            message: "You are requesting information from another employee's account but do not have the clearance to do so!"
+          });
+        }
+
+        get(req, res);
+      })
+    }
+  });
+}
+
+const get = (req, res) => {
+  // find EMPLOYEE_ACCOUNT corresponding to this ID
+  EmployeeAccount.findByID(req.params.AccountID, (err, eAccount) => {
     if (err) {
       if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found customer account with ID ${req.params.AccountID}.`
-        });
-      } else {
-        res.status(500).send({
-          message: `Error updating customer account with ID ${req.params.AccountID}.`
+        return res.status(404).send({
+          message: 'The requested account could not be found!'
         });
       }
-    } else res.send(data);
+      console.log('ERROR (employee_account.controller)', err);
+      return res.status(500).send({
+        message: 'INTERNAL ERROR'
+      });
+    }
+    // find ACCOUNT corresponding to this ID
+    Account.findByID(req.params.AccountID, (err, account) => {
+      if (err) {
+        console.log('ERROR (employee_account.controller)', err);
+        return res.status(500).send({
+          message: 'INTERNAL ERROR'
+        });
+      }
+      const data = {
+        FName: eAccount.FName,
+        LName: eAccount.LName,
+        Email: account.Email,
+        PermissionLevel: eAccount.PermissionLevel
+      }
+      console.log(
+        `employee account with ID ${req.params.AccountID} retrieved:`,
+        data  
+      )
+      // return all info
+      return res.status(200).send({ ...data });
+    })
+  });
+}
+
+
+/**
+ * First authenticates cookie (checks if cookie ID is same as account ID or
+ * if it belongs to an employee with appropriate clearance) and then
+ * updates info from `req.body`.
+ * 
+ * At least one of the following values-to-update must be defined within body:
+ *  - `FName`
+ *  - `LName`
+ *  - `Email`
+ *  - `Password`
+ *  - `PermissionLevel`
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.authUpdate = (req, res) => {
+  // confirm at least one value present.
+  if (!(req.body.FName || req.body.LName || req.body.Email ||
+    req.body.Password || req.body.PermissionLevel)
+  ) {
+    return res.status(400).send({
+      message: 'Cannot request to update no values!'
+    });
+  }
+
+  console.log('updating employee account info for account ID ', req.params.AccountID);
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).send({
+    message: 'Missing cookie required to confirm identity!'
+  });
+
+  jwt.verify(token, "jwtsecretkey", (err, userInfo) => {
+    if (err) {
+      console.log('ERROR (customer_account.controller)', err);
+      return res.status(403).send({
+        message: 'Cookie required to confirm identity is not valid!'
+      });
+    }
+
+    console.log('DEBUG: cookie has ID ', userInfo.id);
+
+    if (userInfo.id == req.params.AccountID) {
+      // user is requesting to update their own account.
+      if (req.body.PermissionLevel) {
+        return res.status(403).send({
+          message: 'Employees are not permitted to change their own permission levels.'
+        })
+      }
+      update(req, res);
+    } else {
+      // cookie ID does not match account ID
+      // confirm cookie ID belongs to employee account
+      EmployeeAccount.findByID(userInfo.id, (err, eAccount) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            return res.status(403).send({
+              message: 'You do not have the right to access the account you are tring to access!'
+            });
+          }
+          console.log('ERROR (customer_account.controller)', err);
+          return res.status(500).send({
+            message: 'INTERNAL ERROR'
+          });
+        }
+
+        if (eAccount.PermissionLevel < 5) {
+          return res.status(403).send({
+            message: 'You do not have sufficient permissions to access any employee accounts but your own!'
+          });
+        }
+
+        update(req, res);
+      })
+    }
+    
+  });
+};
+
+const update = (req, res) => {
+
+  if (req.body.FName || req.body.LName || req.body.PermissionLevel) {
+    // we must change EMPLOYEE_ACCOUNT
+    // first, get phone number from customer account
+    // create employee account model object
+    const eAccount = new EmployeeAccount({
+      AccountID: undefined, // account ID should never have to be changed.
+      FName: req.body.FName,
+      LName: req.body.LName,
+      PermissionLevel: req.body.PermissionLevel
+    });
+    // use model to update employee account
+    EmployeeAccount.update(req.params.AccountID, eAccount, (err, data) => {
+      if (err) {
+        console.log('ERROR (employee_account.controller)', err);
+        return res.status(500).send({
+          message: 'INTERNAL ERROR'
+        });
+      }
+      // no error -- we are done updating employee account
+    });
+  }
+
+  if (req.body.Email || req.body.Password) {
+    // hash password
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(req.body.Password, salt);
+    // create account model object
+    const account = new Account({
+      Email: req.body.Email,
+      Password: hash
+    });
+    // use model to update account
+    Account.update(req.params.AccountID, account, (err, data) => {
+      if (err) {
+        console.log('ERROR (customer_account.controller)', err);
+        return res.status(500).send({
+          message: 'INTERNAL ERROR'
+        });
+      }
+      // no error -- we are done updating account
+    });
+  }
+
+  return res.status(200).send({
+    message: 'account updated!'
+  });
+}
+
+
+/**
+ * First authenticates cookie (checks if cookie ID is same as account ID or
+ * if it belongs to an employee with appropriate clearance) and then
+ * deletes the account
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.authDelete = (req, res) => {
+  console.log('deleting employee account ID ', req.params.AccountID);
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).send({
+    message: 'Missing cookie required to confirm identity!'
+  });
+
+  jwt.verify(token, "jwtsecretkey", (err, userInfo) => {
+    if (err) {
+      console.log('ERROR (customer_account.controller)', err);
+      return res.status(403).send({
+        message: 'Cookie required to confirm identity is not valid!'
+      });
+    }
+
+    console.log('DEBUG: cookie has ID ', userInfo.id);
+
+    if (userInfo.id == req.params.AccountID) {
+      // user is requesting to delete their own account.
+      deleteEAccount(req, res);
+    } else {
+      // cookie ID does not match account ID
+      // check if cookie ID belongs to employee account
+      EmployeeAccount.findByID(userInfo.id, (err, eAccount) => {
+        if (err) {
+          if (err.kind === "not_found") {
+            return res.status(403).send({
+              message: 'You do not have the right to access the account you are tring to access!'
+            });
+          }
+          console.log('ERROR (customer_account.controller)', err);
+          return res.status(500).send({
+            message: 'INTERNAL ERROR'
+          });
+        }
+
+        if (eAccount.PermissionLevel < 5) {
+          return res.status(403).send({
+            message: 'You do not have sufficient permissions to access any accounts but your own!'
+          });
+        }
+
+        deleteEAccount(req, res);
+      })
+    }
+    
   });
 };
 
 
 /**
- * Delete customer account with ID given by `req.params.AccountID`
+ * Delete employee account with ID given by `req.params.AccountID`
  * 
  * @param {*} req 
  * @param {*} res 
  */
-exports.delete = (req, res) => {
-  EmployeeAccount.remove(req.params.AccountID, (err, data) => {
+const deleteEAccount = (req, res) => {
+  Account.remove(req.params.AccountID, (err, data) => {
     if (err) {
-      if (err.kind === "not_found") {
-        res.status(404).send({
-          message: `Not found customer account with ID ${req.params.AccountID}.`
-        });
-      } else {
-        res.status(500).send({
-          message: `Error deleting customer account with ID ${req.params.AccountID}.`
-        });
-      }
-    } else res.send({ message: `Customer account was deleted successfully!`});
+      console.log('ERROR (employee_account.controller)', err);
+      return res.status(500).send({
+        message: 'INTERNAL ERROR'
+      });
+    }
+    // account has been deleted!
+
+    console.log(`deleted employee account with ID ${req.params.AccountID}`);
+    return res.status(200).send({
+      message: 'account deleted!'
+    });
   });
-};
+  // deletion of ACCOUNT will cascade and also delete EMPLOYEE_ACCOUNT
+}
