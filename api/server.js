@@ -29,6 +29,9 @@ app.get("/", (req, res) => {
 
 require("./routes/customer.routes.js")(app);
 require("./routes/account.routes.js")(app);
+require("./routes/location.routes.js")(app);
+require("./routes/reservation.routes.js")(app);
+require("./routes/special_reservation.routes.js")(app);
 
 // set port to listen for requests on
 const PORT = process.env.PORT || 8800;

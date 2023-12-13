@@ -23,6 +23,14 @@ import CreateEmployeeAccount from "./pages/create-employee.jsx";
 import CustomerAccList from "./pages/employee-list-customers.jsx";
 
 
+import Location from "./pages/locations.jsx";
+import ReservationC from "./pages/reservation_create.jsx";
+import ReservationV from "./pages/reservation_view.jsx";
+import ReservationU from "./pages/reservation_update.jsx";
+import Special_reservationC from "./pages/special_event_create.jsx";
+import Special_reservatoinV from "./pages/special_event_view.jsx";
+
+
 class App extends Component {
   render() {
     return (
@@ -40,11 +48,28 @@ class App extends Component {
             <Route path="/employee/login" element={<Login />} />
             <Route path="/employee/createAccount" element={<CreateEmployeeAccount />} />
             <Route path="/employee/customerList" element={<CustomerAccList />} />
-            
+
             <Route path="/customers" element={<DELETECustomersList/>} />
             <Route path="/add" element={<AddCustomer/>} />
             <Route path="/customers/:PhoneNum" element={<Customer/>} />
             <Route path="/menu" element={<ItemsList/>} />
+
+            <Route path="/locations" element={<Location />} />
+            <Route path="/reservation" element={<ReservationC />} />
+            <Route path="/reservation/view" element={<ReservationV />} />
+            <Route
+              path="/reservation/update/:location/:DateTime/:Customer"
+              element={<ReservationU />}
+            />
+            <Route
+              path="/specialreservation"
+              element={<Special_reservationC />}
+            />
+            <Route
+              path="/specialreservation/view"
+              element={<Special_reservatoinV />}
+            />
+            
           </Routes>
         </div>
 
