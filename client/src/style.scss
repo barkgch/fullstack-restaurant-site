@@ -12,6 +12,52 @@ $lightest : white;
 $padding_standard : 10px;
 
 
+button {
+  width: max-content;
+  margin: $padding_standard;
+  padding: 5px 10px;
+  border: none;
+  color: $lightest;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+.btn-delete {
+  background-color: crimson;
+}
+.btn-submit {
+  background-color: green;
+}
+.btn-neutral {
+  color: $base_colour;
+  background-color: $neutral_light;
+}
+.btn-themed {
+  background-color: $base_colour;
+}
+.btn-row {
+  display: flex;
+  gap: $padding_standard;
+}
+.btn-col {
+  display: flex;
+  flex-direction: column;
+  gap: $padding_standard;
+}
+
+
+.page {
+  width: 100%;
+  padding: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+
 //--------------------------------------------------------------------------
 // NAVBAR
 //--------------------------------------------------------------------------
@@ -59,46 +105,22 @@ nav {
 }
 
 
+//--------------------------------------------------------------------------
+// FORMS
+//--------------------------------------------------------------------------
 form {
-  width: 100%;
-  padding: 100px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  
 
   h1 {
     color: $accent_colour;
     font-weight: bold;
   }
 
-  button {
-    width: max-content;
-    margin: $padding_standard;
-    padding: 5px 10px;
-    border: none;
-    color: $lightest;
-    cursor: pointer;
-
-    &:hover {
-      opacity: 0.5;
-    }
-  }
-  .btn-delete {
-    background-color: crimson;
-  }
-  .btn-submit {
-    background-color: green;
-  }
-  .btn-neutral {
-    color: $base_colour;
-    background-color: $neutral_light;
-  }
-
   label {
     font-weight: bold;
     color: $base_colour;
-    margin: $padding_standard
+    margin: $padding_standard;
+    width: max-content;
   }
   .label-group {
     width: 400px;

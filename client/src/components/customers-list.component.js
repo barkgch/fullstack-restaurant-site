@@ -2,13 +2,13 @@ import React, { Component } from "react";
 import CustomerDataService from "../services/customer.service";
 import { Link } from "react-router-dom";
 
-export default class CustomersList extends Component {
+export default class DELETECustomersList extends Component {
   constructor(props) {
     super(props);
     this.retrieveCustomers = this.retrieveCustomers.bind(this);
-    this.refreshList = this.refreshList.bind(this);
+    // this.refreshList = this.refreshList.bind(this);
     this.setActiveCustomer = this.setActiveCustomer.bind(this);
-    this.removeAllCustomers = this.removeAllCustomers.bind(this);
+    // this.removeAllCustomers = this.removeAllCustomers.bind(this);
 
     this.state = {
       customers: [],
@@ -35,13 +35,13 @@ export default class CustomersList extends Component {
       });
   }
 
-  refreshList() {
-    this.retrieveCustomers();
-    this.setState({
-      currentCustomer: null,
-      currentIndex: -1
-    });
-  }
+  // refreshList() {
+  //   this.retrieveCustomers();
+  //   this.setState({
+  //     currentCustomer: null,
+  //     currentIndex: -1
+  //   });
+  // }
 
   setActiveCustomer(customer, index) {
     this.setState({
@@ -50,16 +50,16 @@ export default class CustomersList extends Component {
     });
   }
 
-  removeAllCustomers() {
-    CustomerDataService.deleteAll()
-      .then(response => {
-        console.log(response.data);
-        this.refreshList();
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
+  // removeAllCustomers() {
+  //   CustomerDataService.deleteAll()
+  //     .then(response => {
+  //       console.log(response.data);
+  //       this.refreshList();
+  //     })
+  //     .catch(e => {
+  //       console.log(e);
+  //     });
+  // }
 
   render() {
     const { customers, currentCustomer, currentIndex } = this.state;
@@ -85,14 +85,14 @@ export default class CustomersList extends Component {
               ))}
           </ul>
 
-          <button
+          {/* <button
             className="m-3 btn btn-sm btn-danger"
             onClick={this.removeAllCustomers}
           >
             Remove All
-          </button>
+          </button> */}
         </div>
-        <div className="col-md-6">
+        {/* <div className="col-md-6">
           {currentCustomer ? (
             <div>
               <h4>Customer</h4>
@@ -128,7 +128,7 @@ export default class CustomersList extends Component {
               <p>Please click on a customer...</p>
             </div>
           )}
-        </div>
+        </div> */}
       </div>
     );
   }

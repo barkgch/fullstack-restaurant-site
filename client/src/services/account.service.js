@@ -20,6 +20,13 @@ class AccountDataService {
     return (http.get(`/account/employee/${AccountID}`));
   }
 
+  getAllCustomers() {
+    return (http.get(`/account/customer`));
+  }
+  getAllEmployees() {
+    return (http.get(`/account/employee`));
+  }
+
   updateCustomer(AccountID, updateInfo) {
     return(http.post(`/account/customer/update/${AccountID}`, updateInfo));
   }

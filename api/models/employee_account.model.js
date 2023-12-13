@@ -70,15 +70,37 @@ EmployeeAccount.findByID = (queryID, result) => {
 };
 
 
+/**
+ * Retrieves all non-password information for all employee accounts (includes
+ * employee-account-related info stored in ACCOUNT)
+ * 
+ * For every account, returns:
+ *  - AccountID
+ *  - Email,
+ *  - FName,
+ *  - LName,
+ *  - PermissionLevel
+ * 
+ * @param {*} result 
+ */
 EmployeeAccount.getAll = (result) => {
-  sql.query("SELECT * FROM employee_account", (err, res) => {
+  sql.query(
+    "SELECT AccountID, Email, FName, LName, PermissionLevel " +
+    "FROM account NATURAL JOIN employee_account", 
+    (err, res) => 
+  {
     if (err) {
       console.log("ERROR (EmployeeAccount.getAll): ", err);
       result(err, null);
       return;
     }
 
-    console.log("All employee accounts: ", res);
+    if (!res.length) {
+      console.log("Attempted to retrieve employee account info from empty list.");
+      result({kind: 'not_found'}, null);
+    }
+
+    console.log("All employee account info: ", res);
     result(null, res);
   });
 };

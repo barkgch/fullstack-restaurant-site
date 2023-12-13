@@ -11,7 +11,7 @@
  *        https://www.freecodecamp.org/news/how-to-validate-forms-in-react/
  */
 import React, { useContext, useEffect, useState } from 'react'
-import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 
 import AccountDataService from "../services/account.service.js";
 import { AuthContext } from '../context/auth.context.js';
@@ -19,16 +19,6 @@ import { AuthContext } from '../context/auth.context.js';
 const ManageAccount = () => {
   const { currentUser } = useContext(AuthContext);
 
-  const [inputs, setInputs] = useState({
-    type: "",
-    FName: "",
-    LName: "", 
-    PhoneNum: "", // customer only
-    Email: "",
-    Password: "",
-    PermissionLevel: "", // employees only
-    NumPastOrders: "", // customers only
-  })
   const [err, setError] = useState(null);
 
   const [user, setUser] = useState({
@@ -298,19 +288,19 @@ const ManageAccount = () => {
         (
         <div>
           { pageState.err ? (
-            <div className='error-page'>
+            <div className='page error-page'>
               <h1>Error!</h1>
               <p>{pageState.err}</p>
             </div>
           ) : (
-            <div className='loading-page'>
+            <div className='page loading-page'>
               <h1>Loading...</h1>
               <p>Please wait while requested user information is retrieved.</p>
             </div>
           )}
         </div>
         ) : (
-        <form className='form acc-manage-form'>
+        <form className='page acc-manage-form'>
           { params.AccountID == currentUser.id ? (
               <h1>My Account</h1>
             ) : (
@@ -427,13 +417,13 @@ const ManageAccount = () => {
           </div>
 
           {pageState.editing ? (
-            <div className='button-row'>
+            <div className='btn-row'>
               <button onClick={handleExitEdit} className='btn-neutral'>Cancel</button>
               <button onClick={handleSubmit} className='btn-submit'>Save</button>
               <button onClick={handleDelete} className='btn-delete'>Delete Account</button>
             </div>
           ) : (
-            <div className='button-row'>
+            <div className='btn-row'>
               <button onClick={handleEnterEdit} className='btn-neutral'>Edit</button>
               <button onClick={handleDelete} className='btn-delete'>Delete Account</button>
             </div>

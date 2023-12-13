@@ -28,6 +28,9 @@ module.exports = app => {
   router.get('/customer/:AccountID', cAccount.authGet);
   router.get('/employee/:AccountID', eAccount.authGet);
 
+  router.get(`/customer`, cAccount.authGetAll);
+  router.get(`/employee`, eAccount.authGetAll);
+
   router.delete('/customer/:AccountID', cAccount.authDelete);
   router.delete('/employee/:AccountID', eAccount.authDelete);
 

@@ -97,15 +97,38 @@ CustomerAccount.findByPhone = (queryPhoneNum, result) => {
 };
 
 
+/**
+ * Retrieves all non-password information for all customer accounts (includes
+ * customer-account-related info stored in ACCOUNT and CUSTOMER)
+ * 
+ * For every account, returns:
+ *  - AccountID
+ *  - Email,
+ *  - FName,
+ *  - LName,
+ *  - PhoneNum,
+ *  - NumPastOrders
+ * 
+ * @param {*} result 
+ */
 CustomerAccount.getAll = (result) => {
-  sql.query("SELECT * FROM customer_account", (err, res) => {
+  sql.query(
+    "SELECT AccountID, Email, FName, LName, PhoneNum, NumPastOrders " +
+    "FROM (account NATURAL JOIN customer_account) JOIN customer ON Customer=PhoneNum", 
+    (err, res) => 
+  {
     if (err) {
       console.log("ERROR (CustomerAccount.getAll): ", err);
       result(err, null);
       return;
     }
 
-    console.log("All customer accounts: ", res);
+    if (!res.length) {
+      console.log("Attempted to retrieve customer account info from empty list.");
+      result({kind: 'not_found'}, null);
+    }
+
+    console.log("All customer account info: ", res);
     result(null, res);
   });
 };

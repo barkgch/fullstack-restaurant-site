@@ -283,6 +283,81 @@ const get = (req, res) => {
 
 
 /**
+ * First authenticates cookie (checks if cookie ID belongs to an employee with
+ * appropriate clearance) and then returns info on all employee accounts.
+ * 
+ * Info returned for each employee account:
+ *  - `AccountID`
+ *  - `FName`
+ *  - `LName`
+ *  - `Email`
+ *  - `PermissionLevel`
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.authGetAll = (req, res) => {
+  console.log('DEBUG: getting employee account info for all accounts');
+  const token = req.cookies.access_token;
+  if (!token) return res.status(401).send({
+    message: 'Missing cookie required to confirm identity!'
+  });
+
+  jwt.verify(token, "jwtsecretkey", (err, userInfo) => {
+    if (err) {
+      console.log('ERROR (employee_account.controller)', err);
+      return res.status(403).send({
+        message: 'Cookie required to confirm identity is not valid!'
+      });
+    }
+
+    console.log('DEBUG: cookie has ID ', userInfo.id);
+
+    // check if cookie ID belongs to employee account
+    EmployeeAccount.findByID(userInfo.id, (err, eAccount) => {
+      if (err) {
+        if (err.kind === "not_found") {
+          return res.status(403).send({
+            message: 'You do not have the right to access the account you are tring to access!'
+          });
+        }
+        console.log('ERROR (employee_account.controller)', err);
+        return res.status(500).send({
+          message: 'INTERNAL ERROR'
+        });
+      }
+
+      if (eAccount.PermissionLevel < 5) {
+        return res.status(403).send({
+          message: 'You do not have sufficient permissions to access any employee accounts but your own!'
+        });
+      }
+
+      getAll(req, res);
+    })
+    
+  });
+}
+
+const getAll = (req, res) => {
+  EmployeeAccount.getAll((err, data) => {
+    if (err) {
+      if (err.kind === "not_found") {
+        return res.status(404).send({
+          message: 'No accounts to retrieve!'
+        });
+      }
+      console.log('ERROR (employee_account.controller)', err);
+      return res.status(500).send({
+        message: 'INTERNAL ERROR'
+      });
+    }
+    return res.status(200).send(data);
+  });
+}
+
+
+/**
  * First authenticates cookie (checks if cookie ID is same as account ID or
  * if it belongs to an employee with appropriate clearance) and then
  * updates info from `req.body`.
@@ -315,7 +390,7 @@ exports.authUpdate = (req, res) => {
 
   jwt.verify(token, "jwtsecretkey", (err, userInfo) => {
     if (err) {
-      console.log('ERROR (customer_account.controller)', err);
+      console.log('ERROR (employee_account.controller)', err);
       return res.status(403).send({
         message: 'Cookie required to confirm identity is not valid!'
       });
@@ -341,7 +416,7 @@ exports.authUpdate = (req, res) => {
               message: 'You do not have the right to access the account you are tring to access!'
             });
           }
-          console.log('ERROR (customer_account.controller)', err);
+          console.log('ERROR (employee_account.controller)', err);
           return res.status(500).send({
             message: 'INTERNAL ERROR'
           });
@@ -396,7 +471,7 @@ const update = (req, res) => {
     // use model to update account
     Account.update(req.params.AccountID, account, (err, data) => {
       if (err) {
-        console.log('ERROR (customer_account.controller)', err);
+        console.log('ERROR (employee_account.controller)', err);
         return res.status(500).send({
           message: 'INTERNAL ERROR'
         });
@@ -428,7 +503,7 @@ exports.authDelete = (req, res) => {
 
   jwt.verify(token, "jwtsecretkey", (err, userInfo) => {
     if (err) {
-      console.log('ERROR (customer_account.controller)', err);
+      console.log('ERROR (employee_account.controller)', err);
       return res.status(403).send({
         message: 'Cookie required to confirm identity is not valid!'
       });
@@ -449,7 +524,7 @@ exports.authDelete = (req, res) => {
               message: 'You do not have the right to access the account you are tring to access!'
             });
           }
-          console.log('ERROR (customer_account.controller)', err);
+          console.log('ERROR (employee_account.controller)', err);
           return res.status(500).send({
             message: 'INTERNAL ERROR'
           });

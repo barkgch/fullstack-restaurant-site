@@ -40,7 +40,7 @@ const CreateEmployeeAccount = () => {
     }
     // confirm permission level
     if (input.PermissionLevel === undefined || input.PermissionLevel === "") {
-      throw(new Error("Please enter a permission level for this employee!"));
+      setInputs({PermissionLevel: 0});
     } else {
       // TOOD: perform additional tests to confirm validity of number
     }
@@ -89,77 +89,75 @@ const CreateEmployeeAccount = () => {
   };
 
   return (
-    <div className="submit-form">
+    <form className="page">
       <h1>Employee Account Creation</h1>
-      <div className="form-group">
-        <label htmlFor="fname">Employee First name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="fName"
-          required
-          maxLength="35"
-          name="FName"
-          onChange={handleChange}
-        />
+      <div className="label-group">
+        <label>Name</label>
+        <div className='input-row'>
+          <input
+            type="text"
+            className="label-content"
+            id="fName"
+            maxLength="35"
+            name="FName"
+            placeholder='firstname'
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            className="label-content"
+            id="lName"
+            maxLength="35"
+            name="LName"
+            placeholder='lastname'
+            onChange={handleChange}
+          />
+        </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="lName">Employee Last name</label>
+      <div className="label-group">
+        <label>Clearance</label>
         <input
-          type="text"
-          className="form-control"
-          id="lName"
-          required
-          maxLength="35"
-          name="LName"
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="form-group">
-        <label htmlFor="permission">Employee Permission Level</label>
-        <input
-          type="text"
-          className="form-control"
+          type="number"
+          className="label-content"
           id="permission"
-          required
           maxLength="2"
           name="PermissionLevel"
+          placeholder='0'
           onChange={handleChange}
         />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="email">Employee Email</label>
+      <div className="label-group">
+        <label>Email</label>
         <input
-          type="text"
-          className="form-control"
+          type="email"
+          className="label-content"
           id="email"
-          required
           name="Email"
+          placeholder='example@email.com'
           onChange={handleChange}
         />
       </div>
 
-      <div className="form-group">
-        <label htmlFor="password">Employee Account Password</label>
+      <div className="label-group">
+        <label>Password</label>
         <input
           type="password"
-          className="form-control"
+          className="label-content"
           id="password"
-          required
           maxLength="12"
           name="Password"
+          placeholder='password'
           onChange={handleChange}
         />
       </div>
 
-      <button onClick={handleSubmit} className="btn btn-success">
+      <button onClick={handleSubmit} className="btn-submit">
         Create Employee Account
       </button>
-      {err && <p>{err}</p>}
-    </div>
+      {err && <p className='err-msg'>{err}</p>}
+    </form>
   )
 }
 
