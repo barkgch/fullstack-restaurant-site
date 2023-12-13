@@ -29,6 +29,7 @@ app.get("/", (req, res) => {
 
 require("./routes/customer.routes.js")(app);
 require("./routes/account.routes.js")(app);
+require("./routes/item.routes.js")(app);
 require("./routes/location.routes.js")(app);
 require("./routes/reservation.routes.js")(app);
 require("./routes/special_reservation.routes.js")(app);

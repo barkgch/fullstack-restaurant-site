@@ -58,12 +58,12 @@ const Login = () => {
     }
 
     try {
-      if (location.pathname === '/login') {
-        // customer login
-        await loginCustomer(inputs);
-      } else {
+      if (location.pathname === 'employee/login') {
         // employee login
         await loginEmployee(inputs);
+      } else {
+        // customer login
+        await loginCustomer(inputs);
       }
     } catch (e) {
       setError(e.response.data.message);
@@ -76,7 +76,7 @@ const Login = () => {
   
   return (
     <div className="submit-form">
-      {location.pathname === '/login' ? <h1>Login</h1> : <h1>Employee Login</h1>}
+      {location.pathname === 'employee/login' ? <h1>Employee Login</h1> : <h1>Login</h1>}
       <div className="form-group">
         <label htmlFor="email">Email</label>
         <input
@@ -107,9 +107,9 @@ const Login = () => {
       </button>
       {err && <p>{err}</p>}
       <p>Don't have an account? <Link to="/register">Create one</Link>!</p>
-      {location.pathname === '/login' ? 
-        <p>Are you an employee? Head over to the <Link to="/employee/login">employee login</Link>!</p> :
-        <p>Are you a customer? Head over to the <Link to="/register">customer login</Link>!</p>
+      {location.pathname === 'employee/login' ? 
+        <p>Are you a customer? Head over to the <Link to="/register">customer login</Link>!</p> :
+        <p>Are you an employee? Head over to the <Link to="/employee/login">employee login</Link>!</p>
       }
     </div>
   )

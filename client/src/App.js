@@ -10,7 +10,7 @@ import Footer from './components/footer.js';
 
 import AddCustomer from "./components/add-customer.component";
 import Customer from "./components/customer.component";
-import DELETECustomersList from "./components/customers-list.component";
+import OLDCustomersList from "./components/customers-list.component";
 
 import ItemsList from "./components/items-list.components.js";
 
@@ -39,7 +39,7 @@ class App extends Component {
 
         <div className="container">
           <Routes>
-            <Route path="/" element={<DELETECustomersList/>} />
+            <Route path="/" element={<Login/>} />
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="/account/:AccountID" element={<ManageAccount />} />
@@ -49,7 +49,7 @@ class App extends Component {
             <Route path="/employee/createAccount" element={<CreateEmployeeAccount />} />
             <Route path="/employee/customerList" element={<CustomerAccList />} />
 
-            <Route path="/customers" element={<DELETECustomersList/>} />
+            <Route path="/customers" element={<OLDCustomersList/>} />
             <Route path="/add" element={<AddCustomer/>} />
             <Route path="/customers/:PhoneNum" element={<Customer/>} />
             <Route path="/menu" element={<ItemsList/>} />

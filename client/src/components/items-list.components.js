@@ -8,7 +8,6 @@ export default class ItemsList extends Component {
     this.retrieveItems = this.retrieveItems.bind(this);
     this.refreshList = this.refreshList.bind(this);
     this.setActiveCustomer = this.setActiveItem.bind(this);
-    this.removeAllCustomers = this.removeAllItems.bind(this);
 
     this.state = {
       items: [],
@@ -50,24 +49,13 @@ export default class ItemsList extends Component {
     });
   }
 
-  removeAllItems() {
-    ItemDataService.deleteAll()
-      .then(response => {
-        console.log(response.data);
-        this.refreshList();
-      })
-      .catch(e => {
-        console.log(e);
-      });
-  }
-
   render() {
     const { items, currentItem, currentIndex } = this.state;
 
     return (
       <div className="list row">
         <div className="col-md-6">
-          <h4>Items List</h4>
+          <h4>Menu Items List</h4>
 
           <ul className="list-group">
             {items &&
@@ -84,13 +72,6 @@ export default class ItemsList extends Component {
                 </li>
               ))}
           </ul>
-
-          <button
-            className="m-3 btn btn-sm btn-danger"
-            onClick={this.removeAllItems}
-          >
-            Remove All
-          </button>
         </div>
         <div className="col-md-6">
           {currentItem ? (

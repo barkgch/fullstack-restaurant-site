@@ -4,8 +4,8 @@
  *        https://youtu.be/0aPLk2e2Z3g?si=2YauU5U6pDdNQLMi
  *        https://github.com/safak/youtube2022/tree/blog-app
  */
-$base_colour : darkred;
-$accent_colour : crimson;
+$base_colour : darkblue;
+$accent_colour : navy;
 $neutral_dark : darkslategrey;
 $neutral_light : lightgrey;
 $lightest : white;
@@ -63,7 +63,7 @@ button {
 //--------------------------------------------------------------------------
 nav {
   background-color: $neutral_dark;
-  height: 80px;
+  height: 150px;
   width: 100%;
   display: flex;
   align-items: center;
