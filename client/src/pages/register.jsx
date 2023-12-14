@@ -87,78 +87,81 @@ const Register = () => {
   };
 
   return (
-    <div className="submit-form">
+    <form className="page">
       <h1>Register</h1>
-      <div className="form-group">
-        <label htmlFor="fname">First name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="fName"
-          required
-          maxLength="35"
-          name="FName"
-          onChange={handleChange}
-        />
+      <div className="label-group">
+        <label htmlFor="fname">Name</label>
+        <div className='input-row'>
+          <input
+            type="text"
+            className="label-content"
+            id="fName"
+            required
+            maxLength="35"
+            name="FName"
+            placeholder='firstname'
+            onChange={handleChange}
+          />
+          <input
+            type="text"
+            className="label-content"
+            id="lName"
+            required
+            maxLength="35"
+            name="LName"
+            placeholder='lastname'
+            onChange={handleChange}
+          />
+        </div>
       </div>
 
-      <div className="form-group">
-        <label htmlFor="lName">Last name</label>
-        <input
-          type="text"
-          className="form-control"
-          id="lName"
-          required
-          maxLength="35"
-          name="LName"
-          onChange={handleChange}
-        />
-      </div>
-
-      <div className="form-group">
+      <div className="label-group">
         <label htmlFor="phoneNum">Phone number</label>
         <input
           type="text"
-          className="form-control"
+          className="label-content"
           id="phoneNum"
           required
           maxLength="14"
           name="PhoneNum"
+          placeholder='+1(555)555-5555'
           onChange={handleChange}
         />
       </div>
 
-      <div className="form-group">
+      <div className="label-group">
         <label htmlFor="email">Email</label>
         <input
-          type="text"
-          className="form-control"
+          type="email"
+          className="label-content"
           id="email"
           required
           name="Email"
+          placeholder='example@email.com'
           onChange={handleChange}
         />
       </div>
 
-      <div className="form-group">
+      <div className="label-group">
         <label htmlFor="password">Password</label>
         <input
           type="password"
-          className="form-control"
+          className="label-content"
           id="password"
           required
           maxLength="12"
           name="Password"
+          placeholder='password'
           onChange={handleChange}
         />
       </div>
 
-      <button onClick={handleSubmit} className="btn btn-success">
+      <button onClick={handleSubmit} className="btn-submit">
         Create Account
       </button>
-      {err && <p>{err}</p>}
+      {err && <p className='err-msg'>{err}</p>}
       <p>Already have an account? Go to <Link to="/login">login</Link></p>
-    </div>
+    </form>
   )
 }
 

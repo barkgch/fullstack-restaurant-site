@@ -75,43 +75,41 @@ const Login = () => {
 
   
   return (
-    <div className="submit-form">
+    <form className='page'>
       {location.pathname === '/employee/login' ? <h1>Employee Login</h1> : <h1>Login</h1>}
-      <div className="form-group">
-        <label htmlFor="email">Email</label>
+      <div className="label-group">
+        <label>Email</label>
         <input
           type="text"
-          className="form-control"
+          className="label-content"
           id="email"
-          required
           name="Email"
           onChange={handleChange}
         />
       </div>
 
-      <div className="form-group">
+      <div className="label-group">
         <label htmlFor="password">Password</label>
         <input
           type="password"
-          className="form-control"
+          className="label-content"
           id="password"
-          required
           maxLength="12"
           name="Password"
           onChange={handleChange}
         />
       </div>
 
-      <button onClick={handleSubmit} className="btn btn-success">
+      <button onClick={handleSubmit} className="btn-submit">
         Login
       </button>
-      {err && <p>{err}</p>}
+      {err && <p className='err-msg'>{err}</p>}
       <p>Don't have an account? <Link to="/register">Create one</Link>!</p>
       {location.pathname === '/employee/login' ? 
         <p>Are you a customer? Head over to the <Link to="/register">customer login</Link>!</p> :
         <p>Are you an employee? Head over to the <Link to="/employee/login">employee login</Link>!</p>
       }
-    </div>
+    </form>
   )
 }
 
