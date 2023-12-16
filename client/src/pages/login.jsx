@@ -61,16 +61,16 @@ const Login = () => {
       if (location.pathname === '/employee/login') {
         // employee login
         await loginEmployee(inputs);
+        navigate('/employee')
       } else {
         // customer login
         await loginCustomer(inputs);
+        navigate("/");
       }
     } catch (e) {
       setError(e.response.data.message);
       return;
     }
-
-    navigate("/");
   };
 
   

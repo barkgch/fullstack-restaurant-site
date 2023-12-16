@@ -460,14 +460,18 @@ const update = (req, res) => {
   }
 
   if (req.body.Email || req.body.Password) {
-    // hash password
-    const salt = bcrypt.genSaltSync(10);
-    const hash = bcrypt.hashSync(req.body.Password, salt);
     // create account model object
     const account = new Account({
-      Email: req.body.Email,
-      Password: hash
+      Email: req.body.Email
     });
+
+    if (req.body.Password) {
+      // hash password
+      const salt = bcrypt.genSaltSync(10);
+      const hash = bcrypt.hashSync(req.body.Password, salt);
+      account.Password = hash;
+    }
+
     // use model to update account
     Account.update(req.params.AccountID, account, (err, data) => {
       if (err) {

@@ -49,7 +49,6 @@ const ManageAccount = () => {
   })
 
   const navigate = useNavigate();
-  const location = useLocation();
   const params = useParams();
 
   // called as soon as this page is loaded
@@ -66,7 +65,7 @@ const ManageAccount = () => {
     });
     // check that a user is logged in
     if (currentUser) {
-      if (currentUser.type == 'customer') {
+      if (currentUser.type === 'customer') {
         // retrieve user's info and populate user state with it
         try {
           const res = await AccountDataService.getCustomer(params.AccountID);
@@ -80,7 +79,7 @@ const ManageAccount = () => {
           setPageState({err: err.response.data.message});
           return;
         }
-      } else if (currentUser.type == 'employee') {
+      } else if (currentUser.type === 'employee') {
         // emploree may be accessing their account,
         // or a customer's or another employee's account.
         if (currentUser.id == params.AccountID) {
@@ -257,14 +256,14 @@ const ManageAccount = () => {
 
     console.log({...editState});
 
-    if (user.type == 'customer') {
+    if (user.type === 'customer') {
       try {
         await AccountDataService.updateCustomer(params.AccountID, editState);
       } catch (err) {
         setPageState({err: err.result.data.message});
         return;
       }
-    } else if (user.type == 'employee') {
+    } else if (user.type === 'employee') {
       try {
         await AccountDataService.updateEmployee(params.AccountID, editState);
       } catch (err) {
@@ -278,8 +277,9 @@ const ManageAccount = () => {
       });
       return;
     }
-
     handleExitEdit(e);
+    // reload account info
+    getUserInfo();
   }
 
   return (
