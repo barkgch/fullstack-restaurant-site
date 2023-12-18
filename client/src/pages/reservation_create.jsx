@@ -5,7 +5,7 @@ import LocationDataService from "../services/location.service";
 const AddReservation = () => {
   const [inputs, setInputs] = useState({
     Customer: "",
-    location: "",
+    Location: "", // Changed to "Location"
     numPeople: "",
     type: "Regular",
     date: "",
@@ -30,7 +30,8 @@ const AddReservation = () => {
     if (!input.Customer || !phoneRegex.test(input.Customer)) {
       throw new Error("Please enter a valid 10-digit phone number!");
     }
-    if (!input.location) {
+    if (!input.Location) {
+      // Changed to "Location"
       throw new Error("Please select a location!");
     }
     if (!input.numPeople || isNaN(input.numPeople) || input.numPeople <= 0) {
@@ -42,10 +43,32 @@ const AddReservation = () => {
     if (!input.time) {
       throw new Error("Please select a time!");
     }
+    const convertTo24HourFormat = (time12h) => {
+      const [time, modifier] = time12h.split(" ");
+      let [hours, minutes] = time.split(":");
+      if (hours === "12") {
+        hours = "00";
+      }
+      if (modifier === "PM") {
+        hours = parseInt(hours, 10) + 12;
+      }
+      return `${hours}:${minutes}`;
+    };
+
+    if (input.time) {
+      const time24h = convertTo24HourFormat(input.time);
+      if (time24h < "09:00" || time24h > "22:00") {
+        throw new Error("Please select a time between 9:00 AM and 10:00 PM!");
+      }
+    } else {
+      throw new Error("Please select a time!");
+    }
   };
 
   const handleChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setInputs({ ...inputs, [name]: value });
+    console.log(name, value, inputs);
   };
 
   const handleSubmit = async (event) => {
@@ -57,7 +80,7 @@ const AddReservation = () => {
 
     // Extract the selected location's postal code
     const selectedLocation = locations.find(
-      (location) => location.Postal === inputs.location
+      (location) => location.Postal === inputs.Location // Changed to "Location"
     );
 
     if (!selectedLocation) {
@@ -67,7 +90,7 @@ const AddReservation = () => {
 
     const fullReservationData = {
       Customer: inputs.Customer,
-      Location: selectedLocation.Postal, // Use the postal code of the selected location
+      Location: selectedLocation.Postal,
       NumPeople: inputs.numPeople,
       Type: inputs.type,
       DateTime: dateTime,
@@ -78,7 +101,7 @@ const AddReservation = () => {
       setError("Reservation created successfully!");
       setInputs({
         Customer: "",
-        location: "",
+        Location: "",
         numPeople: "",
         type: "Regular",
         date: "",
@@ -88,6 +111,7 @@ const AddReservation = () => {
       setError("Failed to create reservation. Error: " + error.message);
     }
   };
+
   return (
     <div className="submit-form">
       <h1>Create Reservation</h1>
@@ -98,9 +122,9 @@ const AddReservation = () => {
           className="form-control"
           id="location"
           required
-          name="location"
+          name="Location"
           onChange={handleChange}
-          value={inputs.location}
+          value={inputs.Location}
         >
           <option value="">Select Location</option>
           {locations.map((location, index) => (
@@ -126,22 +150,17 @@ const AddReservation = () => {
       </div>
 
       <label>Select a Time</label>
-      <select
+      <input
+        type="time"
         className="form-control"
         id="timeSelect"
         required
         name="time"
+        value={inputs.time}
         onChange={handleChange}
-      >
-        <option key="" value="">
-          Select Time
-        </option>
-        {availableTimes.map((time, index) => (
-          <option key={index} value={time}>
-            {time}
-          </option>
-        ))}
-      </select>
+        min="09:00"
+        max="22:00"
+      />
 
       <div className="form-group">
         <label htmlFor="Customer">Phone number</label>
@@ -150,7 +169,7 @@ const AddReservation = () => {
           className="form-control"
           id="Customer"
           required
-          maxLength="14"
+          maxLength="10"
           name="Customer"
           value={inputs.Customer}
           onChange={handleChange}

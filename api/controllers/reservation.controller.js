@@ -1,18 +1,32 @@
 const Reservation = require("../models/reservation.model");
 
-// Define your controller functions here
-
 exports.createReservation = (req, res) => {
-  const newReservation = new Reservation(req.body);
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content cannot be empty!",
+    });
+    return;
+  }
+
+  // Update attribute names to match the database column names
+  const newReservation = new Reservation({
+    customer: req.body.Customer,
+    numPeople: req.body.NumPeople,
+    location: req.body.Location,
+    type: req.body.Type,
+    datetime: req.body.DateTime,
+  });
+
+  console.log("cont: ", newReservation);
 
   Reservation.create(newReservation, (err, data) => {
+    console.log("data: ", newReservation);
     if (err) {
-      return res.status(500).send({
+      res.status(500).send({
         message:
           err.message || "Error occurred while creating the reservation.",
       });
-    }
-    res.status(201).json(data);
+    } else res.send(data);
   });
 };
 

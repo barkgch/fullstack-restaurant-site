@@ -2,7 +2,8 @@ import http from "../http-common";
 
 class ReservationDataService {
   createReservation(newReservation) {
-    return http.post("/reservation/", newReservation);
+    console.log(newReservation);
+    return http.post("/reservation", newReservation);
   }
 
   getAllReservations() {

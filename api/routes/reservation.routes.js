@@ -1,8 +1,13 @@
 module.exports = (app) => {
-  const Reservation = require("../controllers/reservation.controller");
-  var router = require("express").Router();
+  const express = require("express");
+  var router = express.Router();
 
-  router.post("/", Reservation.createReservation);
+  const Reservation = require("../controllers/reservation.controller");
+
+  router.post("", (req, res) => {
+    console.log("Request body:", req.body); // Log the request body
+    Reservation.createReservation(req, res);
+  });
 
   router.get("/all", Reservation.getAllReservations);
 

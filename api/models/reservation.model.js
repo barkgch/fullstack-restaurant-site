@@ -8,18 +8,31 @@ const Reservation = function (reservation) {
   this.datetime = reservation.datetime;
 };
 
-// Create a new reservation
 Reservation.create = (newReservation, result) => {
-  sql.query("INSERT INTO RESERVATION SET ?", newReservation, (err, res) => {
-    if (err) {
-      console.log("Error: ", err);
-      result(err, null);
-      return;
-    }
+  console.log("reservation: ", newReservation);
+  sql.query(
+    "INSERT INTO RESERVATION (Customer, NumPeople, Location, Type, DateTime) VALUES (?, ?, ?, ?, ?)",
+    [
+      newReservation.customer,
+      newReservation.numPeople,
+      newReservation.location,
+      newReservation.type,
+      newReservation.datetime,
+    ],
+    (err, res) => {
+      if (err) {
+        console.log("error: ", err);
+        result(err, null);
+        return;
+      }
 
-    console.log("Created reservation: ", { ...newReservation });
-    result(null, { ...newReservation });
-  });
+      console.log("created reservation: ", {
+        id: res.insertId,
+        ...newReservation,
+      });
+      result(null, { id: res.insertId, ...newReservation });
+    }
+  );
 };
 
 // Get all reservations
