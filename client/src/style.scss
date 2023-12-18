@@ -4,13 +4,12 @@
  *        https://youtu.be/0aPLk2e2Z3g?si=2YauU5U6pDdNQLMi
  *        https://github.com/safak/youtube2022/tree/blog-app
  */
-$base_colour : darkblue;
-$accent_colour : navy;
-$neutral_dark : darkslategrey;
-$neutral_light : lightgrey;
-$lightest : white;
-$padding_standard : 10px;
-
+$base_colour: darkblue;
+$accent_colour: navy;
+$neutral_dark: darkslategrey;
+$neutral_light: lightgrey;
+$lightest: white;
+$padding_standard: 10px;
 
 button {
   width: max-content;
@@ -47,7 +46,6 @@ button {
   gap: $padding_standard;
 }
 
-
 .page {
   width: 100%;
   padding: 100px;
@@ -56,7 +54,6 @@ button {
   align-items: center;
   justify-content: center;
 }
-
 
 //--------------------------------------------------------------------------
 // NAVBAR
@@ -96,7 +93,7 @@ nav {
     padding: $padding_standard;
     display: flex;
     align-items: center;
-    color : $neutral_light;
+    color: $neutral_light;
 
     .nav-link {
       color: $lightest;
@@ -104,13 +101,10 @@ nav {
   }
 }
 
-
 //--------------------------------------------------------------------------
 // FORMS
 //--------------------------------------------------------------------------
 form {
-  
-
   h1 {
     color: $accent_colour;
     font-weight: bold;
@@ -126,15 +120,15 @@ form {
     width: 400px;
     display: flex;
     align-content: center;
-    justify-content:space-between;
+    justify-content: space-between;
 
     .label-contents {
       display: flex;
-      margin: $padding_standard
+      margin: $padding_standard;
     }
   }
 
-  input{
+  input {
     width: 100%;
     height: 30px;
     padding: 10px;
@@ -155,31 +149,29 @@ form {
 
 // all below is from lamadev tutorial (or based on it)
 
-
-.app{
+.app {
   display: flex;
   justify-content: center;
 
-  font-family:Verdana, Geneva, Tahoma, sans-serif;  // standard on firefox is serif
+  font-family: Verdana, Geneva, Tahoma, sans-serif; // standard on firefox is serif
 
   // we are tagging React Router links with the link class
-  .link{
+  .link {
     text-decoration: none;
     color: inherit;
   }
   // this is for standard HTML links
-  a{
+  a {
     color: $accent_colour;
   }
 
-
-  .container{
+  .container {
     width: 100%;
 
     //--------------------------------------------------------------------------
     // LOGIN & REGISTER
     //--------------------------------------------------------------------------
-    .auth{
+    .auth {
       display: flex;
       flex-direction: column; // have it centred vertically rather than horizontally
       align-items: center;
@@ -187,28 +179,28 @@ form {
       height: 100vh;
       background-color: $base_colour;
 
-      h1{
+      h1 {
         font-size: 20px;
         color: white;
         margin-bottom: 20px;
       }
 
-      form{
+      form {
         display: flex;
         flex-direction: column;
         padding: 20px;
-        width:200px;
+        width: 200px;
         background-color: white;
         gap: 20px;
 
-        input{
+        input {
           padding: 10px;
           border: none;
           border-bottom: 2px solid $base_colour;
           background-color: white;
         }
 
-        button{
+        button {
           padding: 10px;
           border: none;
           background-color: $accent_colour;
@@ -216,13 +208,13 @@ form {
           cursor: pointer;
         }
 
-        p{
+        p {
           font-size: 16px;
           color: red;
           text-align: center;
         }
 
-        span{
+        span {
           font-size: 12px;
           text-align: center;
         }
@@ -232,7 +224,7 @@ form {
     //--------------------------------------------------------------------------
     // FOOTER
     //--------------------------------------------------------------------------
-    footer{
+    footer {
       margin-top: 100px;
       padding: 20px;
       gap: 20px;
@@ -245,7 +237,7 @@ form {
 
       font-size: 12px;
 
-      img{
+      img {
         width: 30px;
         height: 30px;
       }
@@ -349,7 +341,7 @@ form {
           align-items: center;
           gap: 10px;
           font-size: 14px;
-          
+
           img {
             width: 50px;
             height: 50px;
@@ -468,34 +460,34 @@ form {
         .item {
           border: 1px solid lightgray;
           padding: 10px;
-          flex:1;
+          flex: 1;
           display: flex;
           flex-direction: column;
           justify-content: space-between;
           font-size: 12px;
           color: #555;
 
-          h1{
+          h1 {
             font-size: 20px;
           }
 
-          .file{
+          .file {
             text-decoration: underline;
             cursor: pointer;
           }
 
-          .buttons{
+          .buttons {
             display: flex;
             justify-content: space-between;
 
-            :first-child{
+            :first-child {
               cursor: pointer;
               color: $base_colour;
               background-color: white;
               border: 1px solid $base_colour;
               padding: 3px 5px;
             }
-            :last-child{
+            :last-child {
               cursor: pointer;
               color: white;
               background-color: $base_colour;
@@ -504,7 +496,7 @@ form {
             }
           }
 
-          .cat{
+          .cat {
             display: flex;
             align-items: center;
             gap: 2px;
@@ -514,4 +506,323 @@ form {
       }
     }
   }
+}
+
+.list {
+  margin: 20px;
+  padding: 15px;
+  background-color: $lightest;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px $neutral_dark;
+
+  .list-group-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: $neutral_light;
+    border: 1px solid $neutral_dark;
+    border-radius: 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      background-color: lighten($neutral_light, 5%);
+    }
+  }
+}
+
+.list-group-item {
+  strong {
+    color: $base_colour;
+    font-weight: bold;
+  }
+
+  & > * {
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 768px) {
+  .list {
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .list-group-item {
+    padding: 8px;
+  }
+}
+
+// Form styling
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin: 20px;
+  padding: 20px;
+  background-color: $lightest;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px $neutral_dark;
+
+  label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  input,
+  select {
+    padding: 10px;
+    border: 1px solid $neutral_dark;
+    border-radius: 5px;
+  }
+
+  button {
+    padding: 10px 15px;
+    background-color: $base_colour;
+    color: $lightest;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: darken($base_colour, 10%);
+    }
+  }
+}
+
+// List styling
+.list-view {
+  margin: 20px;
+  padding: 15px;
+  background-color: $lightest;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px $neutral_dark;
+
+  .list-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: $neutral_light;
+    border: 1px solid $neutral_dark;
+    border-radius: 5px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    &:hover {
+      background-color: lighten($neutral_light, 5%);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  form {
+    margin: 10px;
+    padding: 10px;
+  }
+
+  .list-view {
+    margin: 10px;
+    padding: 10px;
+  }
+}
+
+//--------------------------------------------------------------------------
+// Add Reservation Form
+//--------------------------------------------------------------------------
+.add-reservation-form {
+  background-color: $lightest;
+  padding: $padding_standard;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px $neutral_dark;
+  max-width: 500px;
+  margin: auto;
+
+  h1 {
+    color: $accent_colour;
+    text-align: center;
+    margin-bottom: $padding_standard;
+  }
+
+  .form-group {
+    margin-bottom: $padding_standard;
+    label {
+      font-weight: bold;
+      color: $base_colour;
+      margin-bottom: 5px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid $neutral_dark;
+      border-radius: 5px;
+      &:focus {
+        border-color: $accent_colour;
+        box-shadow: 0 0 0 2px rgba($accent_colour, 0.2);
+      }
+    }
+  }
+
+  .btn-submit {
+    width: 100%;
+    padding: 10px 0;
+    margin-top: $padding_standard;
+    background-color: $base_colour;
+    color: $lightest;
+    border: none;
+    border-radius: 5px;
+
+    &:hover {
+      background-color: darken($base_colour, 10%);
+    }
+  }
+
+  p.error-message {
+    color: crimson;
+    text-align: center;
+    margin-top: $padding_standard;
+  }
+}
+
+/* General styling for the reservation view page */
+.reservation-view-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Style for the page title */
+.reservation-view-page h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Style for labels */
+.reservation-view-page label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Style for dropdown select */
+.reservation-view-page select {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Styling for the location details section */
+.location-details {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.location-details h3 {
+  margin-bottom: 15px;
+  color: #444;
+}
+
+/* Styling for the reservation list */
+.location-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.location-details li {
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+/* Styling for reservation details */
+.reservation-detail {
+  display: block; /* Each detail on its own line */
+  margin-bottom: 5px;
+}
+
+/* Style for the update link */
+.reservation-update-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: #4caf50;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.reservation-update-link:hover {
+  background-color: #45a049;
+}
+
+/* General styling for the special reservation view page */
+.special-reservation-view-page {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Style for the page title */
+.special-reservation-view-page h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Style for labels */
+.special-reservation-view-page label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+/* Style for dropdown select */
+.special-reservation-view-page select,
+.special-reservation-view-page input[type="date"] {
+  width: 100%;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Styling for the special location details section */
+.special-location-details {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.special-location-details h3 {
+  margin-bottom: 15px;
+  color: #444;
+}
+
+/* Styling for the reservation list */
+.special-location-details ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.special-location-details li {
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  background-color: #fff;
+}
+
+/* Style for individual reservation details */
+.special-reservation-detail {
+  display: block; /* Each detail on its own line */
+  margin-bottom: 5px;
 }

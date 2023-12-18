@@ -88,12 +88,13 @@ const ViewSpecialReservations = () => {
   }
 
   return (
-    <div>
+    <div className="special-reservation-view-page">
       <h2>View Special Reservation Inquiries</h2>
       <label htmlFor="location">Select Location:</label>
       <select
         id="location"
         name="location"
+        className="location-select"
         value={selectedLocation}
         onChange={handleLocationChange}
       >
@@ -106,7 +107,7 @@ const ViewSpecialReservations = () => {
       </select>
 
       {/* Date input fields */}
-      <div>
+      <div className="date-input-field">
         <label htmlFor="dateAfter">Date After:</label>
         <input
           type="date"
@@ -116,7 +117,7 @@ const ViewSpecialReservations = () => {
           onChange={handleDateAfterChange}
         />
       </div>
-      <div>
+      <div className="date-input-field">
         <label htmlFor="dateBefore">Date Before:</label>
         <input
           type="date"
@@ -128,7 +129,7 @@ const ViewSpecialReservations = () => {
       </div>
 
       {selectedLocationData && (
-        <div>
+        <div className="special-location-details">
           <h3>
             Special Reservations for <br /> {selectedLocationData.Name} (
             {selectedLocationData.Postal})
@@ -136,7 +137,7 @@ const ViewSpecialReservations = () => {
           {reservations.length > 0 ? (
             <ul>
               {reservations.map((reservation) => (
-                <li key={reservation.Id}>
+                <li key={reservation.Id} className="special-reservation-detail">
                   Customer: {reservation.Customer}, Description:{" "}
                   {reservation.Description}, Time Placed:{" "}
                   {formatDateTime(reservation.TimePlaced)}, Requested Time:{" "}

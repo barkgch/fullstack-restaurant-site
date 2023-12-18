@@ -103,11 +103,12 @@ const CreateSpecialReservation = () => {
 
         <label>
           Description:
-          <input
-            type="text"
+          <textarea
             name="Description"
             value={reservationData.Description}
             onChange={handleInputChange}
+            rows="4" // Sets the initial number of lines
+            style={{ width: "400%", padding: "10px" }} // Adjust width and padding as needed
           />
         </label>
 

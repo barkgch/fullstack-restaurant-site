@@ -11,7 +11,6 @@ const AddReservation = () => {
     date: "",
     time: "",
   });
-  const [availableTimes, setAvailableTimes] = useState([]);
   const [locations, setLocations] = useState([]);
   const [error, setError] = useState(null);
 
@@ -68,52 +67,57 @@ const AddReservation = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
-    console.log(name, value, inputs);
   };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
-
-    // Combine the date and time for DateTime
-    const dateTime = `${inputs.date} ${inputs.time}:00`;
-
-    // Extract the selected location's postal code
-    const selectedLocation = locations.find(
-      (location) => location.Postal === inputs.Location // Changed to "Location"
-    );
-
-    if (!selectedLocation) {
-      setError("Please select a valid location.");
-      return;
-    }
-
-    const fullReservationData = {
-      Customer: inputs.Customer,
-      Location: selectedLocation.Postal,
-      NumPeople: inputs.numPeople,
-      Type: inputs.type,
-      DateTime: dateTime,
-    };
-
     try {
-      await ReservationDataService.createReservation(fullReservationData);
-      setError("Reservation created successfully!");
-      setInputs({
-        Customer: "",
-        Location: "",
-        numPeople: "",
-        type: "Regular",
-        date: "",
-        time: "",
-      });
-    } catch (error) {
-      setError("Failed to create reservation. Error: " + error.message);
+      validateInput(inputs);
+
+      // Combine the date and time for DateTime
+      const dateTime = `${inputs.date} ${inputs.time}:00`;
+
+      // Extract the selected location's postal code
+      const selectedLocation = locations.find(
+        (location) => location.Postal === inputs.Location // Changed to "Location"
+      );
+
+      if (!selectedLocation) {
+        setError("Please select a valid location.");
+        return;
+      }
+
+      const fullReservationData = {
+        Customer: inputs.Customer,
+        Location: selectedLocation.Postal,
+        NumPeople: inputs.numPeople,
+        Type: inputs.type,
+        DateTime: dateTime,
+      };
+
+      try {
+        await ReservationDataService.createReservation(fullReservationData);
+        setError("Reservation created successfully!");
+        setInputs({
+          Customer: "",
+          Location: "",
+          numPeople: "",
+          type: "Regular",
+          date: "",
+          time: "",
+        });
+      } catch (error) {
+        setError("Failed to create reservation. Error: " + error.message);
+      }
+    } catch (validationError) {
+      setError(validationError.message);
+      return;
     }
   };
 
   return (
-    <div className="submit-form">
+    <div className="add-reservation-form">
       <h1>Create Reservation</h1>
 
       <div className="form-group">
@@ -192,7 +196,15 @@ const AddReservation = () => {
       <button onClick={handleSubmit} className="btn btn-success">
         Create Reservation
       </button>
-      {error && <p>{error}</p>}
+      {error && (
+        <div
+          className="alert alert-danger"
+          role="alert"
+          style={{ marginTop: "10px" }}
+        >
+          {error}
+        </div>
+      )}
     </div>
   );
 };

@@ -68,7 +68,7 @@ const ViewReservations = () => {
   };
 
   return (
-    <div>
+    <div className="reservation-view-page">
       <h2>View Reservations</h2>
       <label htmlFor="location">Select Location:</label>
       <select
@@ -86,7 +86,7 @@ const ViewReservations = () => {
       </select>
 
       {selectedLocationData && (
-        <div>
+        <div className="location-details">
           <h3>
             Reservations for: <br /> {selectedLocationData.Name} (
             {selectedLocationData.Postal})
@@ -101,11 +101,20 @@ const ViewReservations = () => {
                     reservation.Customer
                   )}
                 >
-                  Customer: {reservation.Customer}, Number of People:{" "}
-                  {reservation.numPeople}, Type: {reservation.Type}, Date and
-                  Time: ,{formatDateTime(reservation.DateTime)}
-                  {"\t"} {/* Tab character */}
+                  <span className="reservation-detail">
+                    Customer: {reservation.Customer}
+                  </span>
+                  <span className="reservation-detail">
+                    Number of People: {reservation.numPeople}
+                  </span>
+                  <span className="reservation-detail">
+                    Type: {reservation.Type}
+                  </span>
+                  <span className="reservation-detail">
+                    Date and Time: {formatDateTime(reservation.DateTime)}
+                  </span>
                   <Link
+                    className="reservation-update-link"
                     to={`/reservation/update/${generateReservationIdentifier(
                       reservation.Location,
                       reservation.DateTime,
