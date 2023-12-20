@@ -12,6 +12,7 @@ const ReservationUpdate = () => {
   // State for handling locations and reservations
   const [locations, setLocations] = useState([]);
   const [customers, setCustomers] = useState([]);
+  const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
   const [previousReservation, setPreviousReservation] = useState({
@@ -111,6 +112,7 @@ const ReservationUpdate = () => {
   // Function to handle input changes and update state
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+    setSuccessMessage("");
     if (name === "DateTime") {
       if (!value) {
         // If DateTime is empty or invalid, set an error message and return
@@ -179,6 +181,21 @@ const ReservationUpdate = () => {
       return;
     }
 
+    const reservationDate = new Date(DateTime);
+    const currentDate = new Date();
+    if (reservationDate <= currentDate) {
+      setErrorMessage("Reservation date and time must be in the future.");
+      return;
+    }
+
+    const reservationHour = reservationDate.getHours();
+
+    // Check if the reservation time is between 9 AM (9) and 10 PM (22)
+    if (reservationHour < 9 || reservationHour >= 22) {
+      setErrorMessage("Reservations must be between 9 AM and 10 PM.");
+      return;
+    }
+
     const customerExists = customers.some(
       (customer) => customer.PhoneNum === Customer
     );
@@ -187,6 +204,8 @@ const ReservationUpdate = () => {
       setErrorMessage("Please use a registered customer");
       return;
     }
+
+    setErrorMessage("");
 
     const timeUpdated = reservationUpdate.DateTime;
     const formattedDateTimeUpdate = formatDateTime(timeUpdated);
@@ -215,6 +234,7 @@ const ReservationUpdate = () => {
               reservationUpdate.Customer
             )}`
           );
+          setSuccessMessage("Reservation seuccesfully updated");
         })
         .catch((error) => {
           console.error("Error updating reservation:", error);
@@ -312,6 +332,13 @@ const ReservationUpdate = () => {
             onChange={handleInputChange}
           />
         </div>
+
+        {/* Success message display */}
+        {successMessage && (
+          <div className="alert alert-success" role="alert">
+            {successMessage}
+          </div>
+        )}
 
         {/* Error message display */}
         {errorMessage && (

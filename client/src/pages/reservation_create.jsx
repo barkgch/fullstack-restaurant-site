@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import ReservationDataService from "../services/reservation.service";
 import LocationDataService from "../services/location.service";
+import CustomerDataService from "../services/customer.service";
 
 const AddReservation = () => {
   const [inputs, setInputs] = useState({
@@ -13,6 +14,7 @@ const AddReservation = () => {
   });
   const [locations, setLocations] = useState([]);
   const [error, setError] = useState(null);
+  const [customers, setCustomers] = useState([]);
 
   useEffect(() => {
     LocationDataService.getDistinguish()
@@ -21,6 +23,17 @@ const AddReservation = () => {
       })
       .catch((error) => {
         console.error("Error fetching locations:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    CustomerDataService.getAll()
+      .then((response) => {
+        setCustomers(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching Customers:", error);
       });
   }, []);
 
@@ -39,23 +52,43 @@ const AddReservation = () => {
     if (!input.date) {
       throw new Error("Please select a date!");
     }
+
+    const customerExists = customers.some(
+      (customer) => customer.PhoneNum === input.Customer
+    );
+
+    if (!customerExists) {
+      throw new Error("Please use a registered customer");
+      return;
+    }
+
+    const dateTimeString = `${input.date} ${input.time}:00`;
+    const reservationDateTime = new Date(dateTimeString);
+    const currentDateTime = new Date();
+
+    if (reservationDateTime <= currentDateTime) {
+      throw new Error("Reservation date and time must be in the future.");
+    }
     if (!input.time) {
       throw new Error("Please select a time!");
     }
     const convertTo24HourFormat = (time12h) => {
-      const [time, modifier] = time12h.split(" ");
+      let [time, modifier] = time12h.split(" ");
       let [hours, minutes] = time.split(":");
+
+      // Convert "12 AM" to "00" and keep "12 PM" as "12"
       if (hours === "12") {
-        hours = "00";
-      }
-      if (modifier === "PM") {
+        hours = modifier === "AM" ? "00" : "12";
+      } else if (modifier === "PM") {
         hours = parseInt(hours, 10) + 12;
       }
+
       return `${hours}:${minutes}`;
     };
 
     if (input.time) {
       const time24h = convertTo24HourFormat(input.time);
+      console.log(time24h);
       if (time24h < "09:00" || time24h > "22:00") {
         throw new Error("Please select a time between 9:00 AM and 10:00 PM!");
       }
