@@ -89,6 +89,14 @@ nav {
     }
   }
 
+  .nav-link {
+    color: $accent_colour;
+    &:hover {
+      cursor: pointer;
+      color: $base_colour;
+    }
+  }
+
   .nav-account {
     padding: $padding_standard;
     display: flex;
@@ -97,6 +105,10 @@ nav {
 
     .nav-link {
       color: $lightest;
+
+      &:hover {
+        color: $neutral_light;
+      }
     }
   }
 }
