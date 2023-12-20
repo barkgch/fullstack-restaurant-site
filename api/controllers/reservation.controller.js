@@ -29,6 +29,54 @@ exports.createReservation = (req, res) => {
     } else res.send(data);
   });
 };
+exports.updateReservation = (req, res) => {
+  const { updatedReservation, previousReservation } = req.body;
+
+  Reservation.update(updatedReservation, previousReservation, (err, data) => {
+    if (err) {
+      // Check if the error is related to a foreign key constraint
+      if (
+        err.code === "ER_NO_REFERENCED_ROW" ||
+        err.code === "ER_NO_REFERENCED_ROW_2"
+      ) {
+        res.status(400).send({
+          message:
+            "Invalid customer reference. Please check the customer details.",
+        });
+      } else {
+        res.status(500).send({
+          message:
+            err.message || "Error occurred while updating the reservation.",
+        });
+      }
+    } else if (!data) {
+      // Handle case where no reservation was found to update
+      res.status(404).send({ message: "No reservation found to update." });
+    } else {
+      // Send success response
+      res.send(data);
+    }
+  });
+};
+
+exports.getReservationsByCustomerLocationDate = (req, res) => {
+  Reservation.getReservationsByCustomerLocationDate(
+    req.params.Customer,
+    req.params.Location,
+    req.params.Datetime,
+    (err, data) => {
+      if (err) {
+        console.log("Error:", err); // Log the error for debugging
+        return res.status(500).send({
+          message:
+            err.message || "Error occurred while retrieving reservations.",
+        });
+      }
+
+      res.json(data);
+    }
+  );
+};
 
 exports.getAllReservations = (req, res) => {
   Reservation.getAll((err, data) => {
@@ -67,32 +115,6 @@ exports.getReservationByPhone = (req, res) => {
   });
 };
 
-exports.updateReservation = (req, res) => {
-  const { customerEmail, datetime } = req.params;
-  const updatedReservation = req.body;
-
-  Reservation.updateByCustomerAndDatetime(
-    customerEmail,
-    datetime,
-    updatedReservation,
-    (err, data) => {
-      if (err) {
-        if (err.kind === "not_found") {
-          return res.status(404).send({
-            message: `No reservation found for customer: ${customerEmail} and datetime: ${datetime}.`,
-          });
-        }
-        return res.status(500).send({
-          message:
-            err.message ||
-            `Error updating reservation for customer: ${customerEmail} and datetime: ${datetime}.`,
-        });
-      }
-      res.json(data);
-    }
-  );
-};
-
 exports.getReservationsByLocation = (req, res) => {
   const location = req.params.location;
 
@@ -108,49 +130,55 @@ exports.getReservationsByLocation = (req, res) => {
   });
 };
 
-exports.getReservationsByLocationDate = (req, res) => {
-  const location = req.params.location; // Use lowercase "location"
-  const dateTime = req.params.dateTime; // Corrected to "dateTime"
+// exports.getReservationsByLocationDate = (req, res) => {
+//   const location = req.params.location; // Use lowercase "location"
+//   const dateTime = req.params.dateTime; // Corrected to "dateTime"
 
-  Reservation.getByLocationAndCustomerAndDateTime(
-    location,
-    customer,
-    dateTime,
-    (err, data) => {
-      if (err) {
-        return res.status(500).send({
-          message:
-            err.message ||
-            `Error occurred while retrieving reservations for location: ${location}.`,
-        });
-      }
-      res.json(data);
-    }
-  );
-};
+//   Reservation.getByLocationAndCustomerAndDateTime(
+//     location,
+//     customer,
+//     dateTime,
+//     (err, data) => {
+//       if (err) {
+//         return res.status(500).send({
+//           message:
+//             err.message ||
+//             `Error occurred while retrieving reservations for location: ${location}.`,
+//         });
+//       }
+//       res.json(data);
+//     }
+//   );
+// };
+
+//delete reservation
 
 exports.deleteReservation = (req, res) => {
-  const { customerEmail, datetime } = req.params;
+  console.log("Received parameters - Customer:", req.params.Customer);
+  console.log("Received parameters - Location:", req.params.Location);
+  console.log("Received parameters - Datetime:", req.params.Datetime);
 
-  Reservation.deleteByCustomerAndDatetime(
-    customerEmail,
-    datetime,
+  Reservation.deleteReservation(
+    req.params.Customer,
+    req.params.Location,
+    req.params.Datetime,
     (err, data) => {
       if (err) {
         if (err.kind === "not_found") {
+          console.log("Reservation not found in the database.");
           return res.status(404).send({
-            message: `No reservation found for customer: ${customerEmail} and datetime: ${datetime}.`,
+            message: `No reservation found for customer: ${req.params.Customer} and datetime: ${req.params.Datetime}.`,
           });
         }
+        console.log("Error deleting reservation:", err);
         return res.status(500).send({
           message:
             err.message ||
-            `Error deleting reservation for customer: ${customerEmail} and datetime: ${datetime}.`,
+            `Error deleting reservation for customer: ${req.params.Customer} and datetime: ${req.params.Datetime}.`,
         });
       }
-      res.send({
-        message: `Reservation deleted successfully for customer: ${customerEmail} and datetime: ${datetime}`,
-      });
+      console.log("Reservation deleted successfully:", data);
+      res.json(data);
     }
   );
 };

@@ -22,11 +22,13 @@ const ViewReservations = () => {
 
   useEffect(() => {
     if (selectedLocation) {
-      // Fetch normal reservations for the selected location
       ReservationDataService.getReservationsByLocation(selectedLocation)
         .then((response) => {
           if (Array.isArray(response.data)) {
-            setReservations(response.data);
+            const sortedReservations = response.data.sort(
+              (a, b) => new Date(a.DateTime) - new Date(b.DateTime)
+            );
+            setReservations(sortedReservations);
           } else {
             console.error("Received data is not in array format");
             setReservations([]);
@@ -64,7 +66,22 @@ const ViewReservations = () => {
 
   // Function to generate a unique reservation identifier
   const generateReservationIdentifier = (location, datetime, customer) => {
-    return `${location}/${datetime}/${customer}`;
+    // Convert the input date and time to 24-hour format without a comma
+    const date = new Date(datetime);
+    const formattedDateTime = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")} ${date
+      .getHours()
+      .toString()
+      .padStart(2, "0")}:${date.getMinutes().toString().padStart(2, "0")}:${date
+      .getSeconds()
+      .toString()
+      .padStart(2, "0")}`;
+
+    console.log(formattedDateTime);
+
+    // Return the formatted reservation identifier
+    return `${location}/${formattedDateTime}/${customer}`;
   };
 
   return (

@@ -6,6 +6,13 @@ class ReservationDataService {
     return http.post("/reservation", newReservation);
   }
 
+  updateReservation(updatedReservation, previousReservation) {
+    return http.post(`/reservation/update`, {
+      updatedReservation: updatedReservation,
+      previousReservation: previousReservation,
+    });
+  }
+
   getAllReservations() {
     return http.get("/reservation/all");
   }
@@ -14,15 +21,19 @@ class ReservationDataService {
     return http.get(`/reservation/phone/${phoneNum}`);
   }
 
-  updateReservation(customerEmail, datetime, updatedReservation) {
-    return http.put(
-      `/reservation/update/${customerEmail}/${datetime}`,
-      updatedReservation
+  getReservationsByCustomerLocationDate(Customer, Location, Datetime) {
+    return http.get(
+      `/reservation/update/get/${Customer}/${Location}/${Datetime}`
     );
   }
 
-  deleteReservation(customerEmail, datetime) {
-    return http.delete(`/reservation/delete/${customerEmail}/${datetime}`);
+  deleteReservation(Customer, Location, Datetime) {
+    const url = `/reservation/delete/${encodeURIComponent(
+      Customer
+    )}/${encodeURIComponent(Location)}/${encodeURIComponent(Datetime)}`;
+    console.log("DELETE URL:", url);
+
+    return http.delete(url);
   }
 
   getReservationsByLocation(location) {
@@ -33,9 +44,9 @@ class ReservationDataService {
     return http.get(`/times/location/${location}`);
   }
 
-  getReservationsByLocationDate(Location, DateTime) {
-    return http.get(`/reservation/${Location}/${DateTime}`);
-  }
+  // getReservationsByLocationDate(Location, DateTime) {
+  //   return http.get(`/reservation/${Location}/${DateTime}`);
+  // }
 }
 
 export default new ReservationDataService();
